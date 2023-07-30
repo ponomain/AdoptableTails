@@ -8,4 +8,4 @@ pluginManagement {
     }
 }
 include("adoptable-tails-init")
-
+include("adoptable-tails-app")

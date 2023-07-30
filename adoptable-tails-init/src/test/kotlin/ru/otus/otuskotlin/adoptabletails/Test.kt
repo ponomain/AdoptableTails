@@ -1,3 +1,5 @@
+package ru.otus.otuskotlin.adoptabletails
+
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

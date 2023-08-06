@@ -1,0 +1,427 @@
+openapi: 3.0.4
+info:
+  title: Adoptable Tails
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: petAd
+    description: Advertisement of the homeless pet
+paths:
+  /pet-ad/create:
+    post:
+      tags:
+        - petAd
+      summary: Create pet advertisement
+      operationId: petAdCreate
+      requestBody:
+        description: Request Body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetAdCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetAdCreateResponse'
+  /pet-ad/get:
+    post:
+      tags:
+        - petAd
+      summary: Get existing pet advertisement
+      operationId: petAdGet
+      requestBody:
+        description: Request Body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetAdGetRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetAdGetResponse'
+  /pet-ad/update:
+    post:
+      tags:
+        - petAd
+      summary: Update existing pet advertisement
+      operationId: petAdUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetAdUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetAdUpdateResponse'
+  /pet-ad/delete:
+    post:
+      tags:
+        - petAd
+      summary: Delete pet advertisement
+      operationId: petAdDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetAdDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetAdDeleteResponse'
+
+  /pet-ad/search:
+    post:
+      tags:
+        - petAd
+      summary: Search pet advertisements
+      operationId: petAdSearch
+      requestBody:
+        description: RequestBody
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetAdSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetAdSearchResponse'
+
+components:
+  schemas:
+
+    IRequest:
+      type: object
+      description: Basic interface for all requests
+      properties:
+        requestType:
+          type: string
+          description: Discriminator field to determine the request type
+          example: userCreate
+        requestId:
+          type: string
+          description: Request identifier for debugging
+      discriminator:
+        propertyName: requestType
+        mapping:
+          petAdCreate: '#/components/schemas/PetAdCreateRequest'
+          petAdGet: '#/components/schemas/PetAdGetRequest'
+          petAdUpdate: '#/components/schemas/PetAdUpdateRequest'
+          petAdDelete: '#/components/schemas/PetAdDeleteRequest'
+          petAdSearch: '#/components/schemas/PetAdSearchRequest'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    IResponse:
+      type: object
+      description: Basic interface for all responses
+      properties:
+        responseType:
+          type: string
+          description: Discriminator field to determine the response type
+          example: userCreate
+        requestId:
+          type: string
+          description: Request identifier for debugging
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      discriminator:
+        propertyName: responseType
+        mapping:
+          petAdCreate: '#/components/schemas/PetAdCreateResponse'
+          petAdGet: '#/components/schemas/PetAdGetResponse'
+          petAdUpdate: '#/components/schemas/PetAdUpdateResponse'
+          petAdDelete: '#/components/schemas/PetAdDeleteResponse'
+          petAdSearch: '#/components/schemas/PetAdSearchResponse'
+
+    PetAdId:
+      type: string
+      description: ID of the pet advertisements
+
+    PetType:
+      type: string
+      description: Type of the pet
+      enum:
+        - DOG
+        - CAT
+        - NONE
+
+    PetTemperament:
+      type: string
+      description: Temperament of the pet
+      enum:
+        - SANGUINE
+        - CHOLERIC
+        - PHLEGMATIC
+        - MELANCHOLIC
+        - NONE
+
+    PetAdStatus:
+      type: string
+      description: Status of the pet advertisements
+      enum:
+        - RESERVED
+        - ADOPTED
+        - AVAILABLE
+        - NONE
+
+    BaseCreatePetAd:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the pet
+        breed:
+          type: string
+          description: Breed of the pet
+        petType:
+          type: string
+          description: Type of the pet
+        age:
+          type: number
+          description: Age of the pet
+        temperament:
+          type: string
+          description: Pet temperament
+        size:
+          type: string
+          description: Size of the pet
+        description:
+          type: string
+          description: Description of the pet
+
+    BaseUpdatePetAd:
+      type: object
+      properties:
+        adStatus:
+          type: string
+          description: Status of the advertisement
+
+    BaseFullPetAd:
+      allOf:
+        - $ref: '#/components/schemas/BaseCreatePetAd'
+        - $ref: '#/components/schemas/BaseUpdatePetAd'
+
+    PetAdCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseCreatePetAd'
+
+    PetAdCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/PetAdRequestDebug'
+        - type: object
+          properties:
+            petAd:
+              $ref: '#/components/schemas/PetAdCreateObject'
+
+    PetAdGetObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/PetAdId'
+
+    PetAdGetRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/PetAdRequestDebug'
+        - type: object
+          properties:
+            petAd:
+              $ref: '#/components/schemas/PetAdGetObject'
+
+    PetAdUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseUpdatePetAd'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/PetAdId'
+
+    PetAdUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/PetAdRequestDebug'
+        - type: object
+          properties:
+            petAd:
+              $ref: '#/components/schemas/PetAdUpdateObject'
+
+    PetAdDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/PetAdId'
+
+    PetAdDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/PetAdRequestDebug'
+        - type: object
+          properties:
+            petAd:
+              $ref: '#/components/schemas/PetAdDeleteObject'
+
+    PetAdSearchFilter:
+      type: object
+      description: Set of filters for searching
+      properties:
+        breed:
+          type: string
+          description: Breed of the pet
+        type:
+          type: string
+          description: Type of the pet
+        temperament:
+          type: string
+          description: Temperament of the pet
+
+    PetAdSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/PetAdRequestDebug'
+        - type: object
+          properties:
+            petAdFilter:
+              $ref: '#/components/schemas/PetAdSearchFilter'
+
+    PetAdResponseDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/PetAdId'
+
+    PetAdResponseFullObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseFullPetAd'
+        - $ref: '#/components/schemas/PetAdResponseDeleteObject'
+
+    PetAdResponseDeleteSingle:
+      allOf:
+        - type: object
+          description: Response with only the identifier.
+          properties:
+            petAd:
+              $ref: '#/components/schemas/PetAdResponseDeleteObject'
+
+    PetAdResponseFullSingle:
+      allOf:
+        - type: object
+          description: Response with a single object value.
+          properties:
+            petAd:
+              $ref: '#/components/schemas/PetAdResponseFullObject'
+
+    PetAdResponseMulti:
+      allOf:
+        - type: object
+          description: List of found advertisements
+          properties:
+            petAds:
+              type: array
+              items:
+                $ref: '#/components/schemas/PetAdResponseFullObject'
+
+    PetAdCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/PetAdResponseFullSingle'
+
+    PetAdGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/PetAdResponseFullSingle'
+
+    PetAdUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/PetAdResponseFullSingle'
+
+    PetAdDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/PetAdResponseDeleteSingle'
+
+
+    PetAdSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/PetAdResponseMulti'
+
+    # STUBS ======================
+    PetAdRequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    PetAdRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/PetAdDebug'
+
+    PetAdDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/PetAdRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/PetAdRequestDebugStubs'
+
+    PetAdRequestDebugStubs:
+      type: string
+      description: Enumerating all the stubs.
+      enum:
+        - success
+        - cannotCreate
+        - cannotRead
+        - cannotUpdate
+        - cannotDelete
+        - cannotSearch

@@ -23,4 +23,5 @@ include("adoptable-tails-common")
 include("adoptable-tails-mappers")
 include("adoptable-tails-app-ktor")
 include("adoptable-tails-stubs")
+include("adoptable-tails-app-kafka")
 

@@ -1,12 +1,12 @@
 package ru.otus.otuskotlin.adoptabletails.mappers
 
 import org.junit.Test
-import ru.otus.otuskotlin.adoptabletails.common.PetAdContext
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdCommand
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdError
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdRequestId
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdState
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdWorkMode
+import ru.otus.otuskotlin.adoptabletails.common.AdoptableTailsContext
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsCommand
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsError
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsRequestId
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsState
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsWorkMode
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
@@ -44,11 +44,11 @@ class MappersTest {
             ),
         )
 
-        val context = PetAdContext().fromTransportPetAd(req)
+        val context = AdoptableTailsContext().fromTransportPetAd(req)
 
         assertEquals(PetAdStubs.SUCCESS, context.stub)
-        assertEquals(PetAdWorkMode.STUB, context.workMode)
-        assertEquals(PetAdCommand.CREATE, context.command)
+        assertEquals(AdoptableTailsWorkMode.STUB, context.workMode)
+        assertEquals(AdoptableTailsCommand.CREATE, context.command)
         assertEquals("test name", context.petAdRequest.name)
         assertEquals("test description", context.petAdRequest.description)
         assertEquals(BigDecimal.valueOf(3), context.petAdRequest.age)
@@ -60,9 +60,9 @@ class MappersTest {
 
     @Test
     fun toTransportOrder() {
-        val context = PetAdContext(
-            requestId = PetAdRequestId("1234"),
-            command = PetAdCommand.CREATE,
+        val context = AdoptableTailsContext(
+            requestId = AdoptableTailsRequestId("1234"),
+            command = AdoptableTailsCommand.CREATE,
             petAdResponse = PetAd(
                 name = "test name",
                 description = "test description",
@@ -73,7 +73,7 @@ class MappersTest {
                 size = "big",
             ),
             errors = listOf(
-                PetAdError(
+                AdoptableTailsError(
                     code = "err",
                     group = "request",
                     field = "title",
@@ -81,7 +81,7 @@ class MappersTest {
                     exception = Exception("test exception")
                 )
             ).toMutableList(),
-            state = PetAdState.RUNNING,
+            state = AdoptableTailsState.RUNNING,
         )
 
         val req = context.toTransportPetAd() as PetAdCreateResponse

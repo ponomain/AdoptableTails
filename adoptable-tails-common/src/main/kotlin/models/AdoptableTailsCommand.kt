@@ -1,6 +1,6 @@
 package ru.otus.otuskotlin.adoptabletails.common.models
 
-enum class PetAdCommand {
+enum class AdoptableTailsCommand {
     NONE,
     CREATE,
     READ,

@@ -1,16 +1,16 @@
 package ru.otus.otuskotlin.adoptabletails.mappers.mapper
 
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdWorkMode
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsWorkMode
 import ru.otus.otuskotlin.adoptabletails.common.stubs.PetAdStubs
 import ru.otus.otuskotlin.api.models.PetAdDebug
 import ru.otus.otuskotlin.api.models.PetAdRequestDebugMode
 import ru.otus.otuskotlin.api.models.PetAdRequestDebugStubs
 
-fun PetAdDebug?.transportToWorkMode(): PetAdWorkMode = when (this?.mode) {
-    PetAdRequestDebugMode.STUB -> PetAdWorkMode.STUB
-    PetAdRequestDebugMode.TEST -> PetAdWorkMode.TEST
-    PetAdRequestDebugMode.PROD -> PetAdWorkMode.PROD
-    null -> PetAdWorkMode.PROD
+fun PetAdDebug?.transportToWorkMode(): AdoptableTailsWorkMode = when (this?.mode) {
+    PetAdRequestDebugMode.STUB -> AdoptableTailsWorkMode.STUB
+    PetAdRequestDebugMode.TEST -> AdoptableTailsWorkMode.TEST
+    PetAdRequestDebugMode.PROD -> AdoptableTailsWorkMode.PROD
+    null -> AdoptableTailsWorkMode.PROD
 }
 
 fun PetAdDebug?.transportToStubCase(): PetAdStubs = when (this?.stub) {

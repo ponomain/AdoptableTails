@@ -1,9 +1,9 @@
 package ru.otus.otuskotlin.adoptabletails.mappers.mapper
 
-import ru.otus.otuskotlin.adoptabletails.common.PetAdContext
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdCommand
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdRequestId
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdWorkMode
+import ru.otus.otuskotlin.adoptabletails.common.AdoptableTailsContext
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsCommand
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsRequestId
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsWorkMode
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdFilter
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
@@ -26,7 +26,7 @@ import ru.otus.otuskotlin.api.models.PetAdUpdateObject
 import ru.otus.otuskotlin.api.models.PetAdUpdateRequest
 import java.math.BigDecimal
 
-fun PetAdContext.fromTransportPetAd(request: IRequest) = when (request) {
+fun AdoptableTailsContext.fromTransportPetAd(request: IRequest) = when (request) {
     is PetAdCreateRequest -> fromTransportPetAd(request)
     is PetAdGetRequest -> fromTransportPetAd(request)
     is PetAdUpdateRequest -> fromTransportPetAd(request)
@@ -37,13 +37,13 @@ fun PetAdContext.fromTransportPetAd(request: IRequest) = when (request) {
 
 private fun String?.toPetAdId() = this?.let { PetAdId(it) } ?: PetAdId.NONE
 private fun String?.toPetAdWithId() = PetAd(id = this.toPetAdId())
-private fun IRequest?.requestId() = this?.requestId?.let { PetAdRequestId(it) } ?: PetAdRequestId.NONE
+private fun IRequest?.requestId() = this?.requestId?.let { AdoptableTailsRequestId(it) } ?: AdoptableTailsRequestId.NONE
 
-private fun PetAdDebug?.transportPetAdToWorkMode(): PetAdWorkMode = when (this?.mode) {
-    PetAdRequestDebugMode.PROD -> PetAdWorkMode.PROD
-    PetAdRequestDebugMode.STUB -> PetAdWorkMode.STUB
-    PetAdRequestDebugMode.TEST -> PetAdWorkMode.TEST
-    null -> PetAdWorkMode.PROD
+private fun PetAdDebug?.transportPetAdToWorkMode(): AdoptableTailsWorkMode = when (this?.mode) {
+    PetAdRequestDebugMode.PROD -> AdoptableTailsWorkMode.PROD
+    PetAdRequestDebugMode.STUB -> AdoptableTailsWorkMode.STUB
+    PetAdRequestDebugMode.TEST -> AdoptableTailsWorkMode.TEST
+    null -> AdoptableTailsWorkMode.PROD
 }
 
 private fun PetAdDebug?.transportPetAdToStubCase(): PetAdStubs = when (this?.stub) {
@@ -56,40 +56,40 @@ private fun PetAdDebug?.transportPetAdToStubCase(): PetAdStubs = when (this?.stu
     null -> PetAdStubs.NONE
 }
 
-private fun PetAdContext.fromTransportPetAd(request: PetAdCreateRequest) = this.copy(
-    command = PetAdCommand.CREATE,
+private fun AdoptableTailsContext.fromTransportPetAd(request: PetAdCreateRequest) = this.copy(
+    command = AdoptableTailsCommand.CREATE,
     requestId = request.requestId(),
     petAdRequest = request.petAd?.toInternal() ?: PetAd(),
     workMode = request.debug.transportPetAdToWorkMode(),
     stub = request.debug.transportPetAdToStubCase()
 )
 
-private fun PetAdContext.fromTransportPetAd(request: PetAdGetRequest) = this.copy(
-    command = PetAdCommand.READ,
+private fun AdoptableTailsContext.fromTransportPetAd(request: PetAdGetRequest) = this.copy(
+    command = AdoptableTailsCommand.READ,
     requestId = request.requestId(),
     petAdRequest = request.petAd?.id.toPetAdWithId(),
     workMode = request.debug.transportPetAdToWorkMode(),
     stub = request.debug.transportPetAdToStubCase()
 )
 
-private fun PetAdContext.fromTransportPetAd(request: PetAdUpdateRequest) = this.copy(
-    command = PetAdCommand.UPDATE,
+private fun AdoptableTailsContext.fromTransportPetAd(request: PetAdUpdateRequest) = this.copy(
+    command = AdoptableTailsCommand.UPDATE,
     requestId = request.requestId(),
     petAdRequest = request.petAd?.toInternal() ?: PetAd(),
     workMode = request.debug.transportPetAdToWorkMode(),
     stub = request.debug.transportPetAdToStubCase()
 )
 
-private fun PetAdContext.fromTransportPetAd(request: PetAdDeleteRequest) = this.copy(
-    command = PetAdCommand.DELETE,
+private fun AdoptableTailsContext.fromTransportPetAd(request: PetAdDeleteRequest) = this.copy(
+    command = AdoptableTailsCommand.DELETE,
     requestId = request.requestId(),
     petAdRequest = request.petAd?.id.toPetAdWithId(),
     workMode = request.debug.transportPetAdToWorkMode(),
     stub = request.debug.transportPetAdToStubCase()
 )
 
-private fun PetAdContext.fromTransportPetAd(request: PetAdSearchRequest) = this.copy(
-    command = PetAdCommand.SEARCH,
+private fun AdoptableTailsContext.fromTransportPetAd(request: PetAdSearchRequest) = this.copy(
+    command = AdoptableTailsCommand.SEARCH,
     requestId = request.requestId(),
     petAdFilter = request.petAdFilter.toInternal(),
     workMode = request.debug.transportPetAdToWorkMode(),

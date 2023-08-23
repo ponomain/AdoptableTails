@@ -10,4 +10,5 @@ dependencies {
 
     testImplementation(kotlin("test-junit"))
     api("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
+    api(project(":adoptable-tails-lib-log-common"))
 }

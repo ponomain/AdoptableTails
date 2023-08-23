@@ -16,7 +16,7 @@ import org.apache.kafka.common.errors.WakeupException
 import ru.otus.otuskotlin.adoptabletails.app.kafka.configuration.KafkaConfiguration
 import ru.otus.otuskotlin.adoptabletails.app.kafka.utils.createKafkaConsumer
 import ru.otus.otuskotlin.adoptabletails.app.kafka.utils.createKafkaProducer
-import ru.otus.otuskotlin.adoptabletails.common.PetAdContext
+import ru.otus.otuskotlin.adoptabletails.common.AdoptableTailsContext
 import ru.otus.otuskotlin.adoptabletails.stubs.PetAdStub
 import java.time.Duration
 import java.util.*
@@ -26,17 +26,17 @@ private val log = KotlinLogging.logger {}
 data class InputOutputTopics(val input: String, val output: String)
 
 class PetAdProcessor {
-    fun exec(ctx: PetAdContext) {
+    fun exec(ctx: AdoptableTailsContext) {
         when (ctx) {
-            is PetAdContext -> ctx.petAdResponse = PetAdStub.getPetAd()
+            is AdoptableTailsContext -> ctx.petAdResponse = PetAdStub.getPetAd()
         }
     }
 }
 
 interface ConsumerStrategy {
     fun topics(config: KafkaConfiguration): InputOutputTopics
-    fun serialize(source: PetAdContext): String
-    fun deserialize(value: String, target: PetAdContext)
+    fun serialize(source: AdoptableTailsContext): String
+    fun deserialize(value: String, target: AdoptableTailsContext)
 }
 
 class AdoptableTailsKafkaConsumer(
@@ -59,7 +59,7 @@ class AdoptableTailsKafkaConsumer(
         try {
             consumer.subscribe(topicsAndStrategyByInputTopic.keys)
             while (process.value) {
-                val ctx = PetAdContext(
+                val ctx = AdoptableTailsContext(
                     timeStart = Clock.System.now(),
                 )
                 val records: ConsumerRecords<String, String> = withContext(Dispatchers.IO) {
@@ -97,7 +97,7 @@ class AdoptableTailsKafkaConsumer(
         }
     }
 
-    private fun sendResponse(context: PetAdContext, strategy: ConsumerStrategyImpl, outputTopic: String) {
+    private fun sendResponse(context: AdoptableTailsContext, strategy: ConsumerStrategyImpl, outputTopic: String) {
         val json = strategy.serialize(context)
         val resRecord = ProducerRecord(
             outputTopic,

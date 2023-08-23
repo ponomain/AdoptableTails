@@ -3,7 +3,7 @@ package ru.otus.otuskotlin.adoptabletails.app.kafka
 import ru.otus.otuskotlin.adoptabletails.api.apiV1RequestDeserialize
 import ru.otus.otuskotlin.adoptabletails.api.apiV1ResponseSerialize
 import ru.otus.otuskotlin.adoptabletails.app.kafka.configuration.KafkaConfiguration
-import ru.otus.otuskotlin.adoptabletails.common.PetAdContext
+import ru.otus.otuskotlin.adoptabletails.common.AdoptableTailsContext
 import ru.otus.otuskotlin.adoptabletails.mappers.mapper.fromTransportPetAd
 import ru.otus.otuskotlin.adoptabletails.mappers.mapper.toTransportPetAd
 import ru.otus.otuskotlin.api.models.IRequest
@@ -14,12 +14,12 @@ class ConsumerStrategyImpl : ConsumerStrategy {
         return InputOutputTopics(config.kafkaTopicInV1, config.kafkaTopicOutV1)
     }
 
-    override fun serialize(source: PetAdContext): String {
+    override fun serialize(source: AdoptableTailsContext): String {
         val response: IResponse = source.toTransportPetAd()
         return apiV1ResponseSerialize(response)
     }
 
-    override fun deserialize(value: String, target: PetAdContext) {
+    override fun deserialize(value: String, target: AdoptableTailsContext) {
         val request: IRequest = apiV1RequestDeserialize(value)
         target.fromTransportPetAd(request)
     }

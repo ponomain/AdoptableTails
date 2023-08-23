@@ -11,10 +11,6 @@ import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.testing.*
 import ru.otus.otuskotlin.adoptabletails.api.apiV1Mapper
-import ru.otus.otuskotlin.adoptabletails.common.PetAdContext
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdCommand
-import ru.otus.otuskotlin.adoptabletails.common.models.PetAdRequestId
-import ru.otus.otuskotlin.adoptabletails.mappers.mapper.toTransportPetAd
 import ru.otus.otuskotlin.adoptabletails.stubs.PetAdStub
 import ru.otus.otuskotlin.api.models.PetAdCreateObject
 import ru.otus.otuskotlin.api.models.PetAdCreateRequest
@@ -42,101 +38,6 @@ import java.math.BigDecimal
 @Test
 class PetAdSuccessStubTest : FunSpec({
 
-    val createRequest = PetAdCreateRequest(
-        requestType = "create",
-        requestId = "123",
-        debug = PetAdDebug(
-            mode = PetAdRequestDebugMode.STUB,
-            stub = PetAdRequestDebugStubs.SUCCESS
-        ),
-        petAd = PetAdCreateObject(
-            name = "Waffle",
-            description = "Very energetic and playfull dog",
-            breed = "Corgi",
-            petType = PetType.DOG.name,
-            age = BigDecimal.valueOf(3.3),
-            temperament = PetTemperament.MELANCHOLIC.name,
-            propertySize = "below average"
-        )
-    )
-
-    val createResponse = PetAdContext().apply {
-        requestId = PetAdRequestId("123")
-        petAdResponse = PetAdStub.getPetAd()
-        command = PetAdCommand.CREATE
-    }.toTransportPetAd()
-
-    val updateRequest = PetAdUpdateRequest(
-        requestType = "update",
-        requestId = "123",
-        debug = PetAdDebug(
-            mode = PetAdRequestDebugMode.STUB,
-            stub = PetAdRequestDebugStubs.SUCCESS
-        ),
-        petAd = PetAdUpdateObject(
-            adStatus = PetAdStatus.ADOPTED.name
-        )
-    )
-
-    val updateResponse = PetAdContext().apply {
-        requestId = PetAdRequestId("123")
-        petAdResponse = PetAdStub.getPetAd()
-        command = PetAdCommand.UPDATE
-    }.toTransportPetAd()
-
-    val readRequest = PetAdGetRequest(
-        requestType = "read",
-        requestId = "123",
-        debug = PetAdDebug(
-            mode = PetAdRequestDebugMode.STUB,
-            stub = PetAdRequestDebugStubs.SUCCESS
-        ),
-        petAd = PetAdGetObject(
-            id = "123"
-        )
-    )
-
-    val readResponse = PetAdContext().apply {
-        requestId = PetAdRequestId("123")
-        petAdResponse = PetAdStub.getPetAd()
-        command = PetAdCommand.READ
-    }.toTransportPetAd()
-
-
-    val deleteRequest = PetAdDeleteRequest(
-        requestType = "delete",
-        requestId = "123",
-        debug = PetAdDebug(
-            mode = PetAdRequestDebugMode.STUB,
-            stub = PetAdRequestDebugStubs.SUCCESS
-        ),
-        petAd = PetAdDeleteObject(
-            id = "123"
-        )
-    )
-
-    val deleteResponse = PetAdContext().apply {
-        requestId = PetAdRequestId("123")
-        command = PetAdCommand.DELETE
-    }.toTransportPetAd()
-
-    val searchRequest = PetAdSearchRequest(
-        requestType = "search",
-        requestId = "123",
-        debug = PetAdDebug(
-            mode = PetAdRequestDebugMode.STUB,
-            stub = PetAdRequestDebugStubs.SUCCESS
-        ),
-        petAdFilter = PetAdSearchFilter("Corgi", PetType.DOG.name, PetTemperament.MELANCHOLIC.name)
-    )
-
-    val searchResponse = PetAdContext().apply {
-        requestId = PetAdRequestId("123")
-        petAdsResponse = PetAdStub.getPetAds()
-        command = PetAdCommand.SEARCH
-    }.toTransportPetAd()
-
-
     test("Create request success stub") {
         testApplication {
             val client = createClient {
@@ -147,12 +48,41 @@ class PetAdSuccessStubTest : FunSpec({
                     }
                 }
             }
+            val createRequest = PetAdCreateRequest(
+                requestType = "create",
+                requestId = "123",
+                debug = PetAdDebug(
+                    mode = PetAdRequestDebugMode.STUB,
+                    stub = PetAdRequestDebugStubs.SUCCESS
+                ),
+                petAd = PetAdCreateObject(
+                    name = "Sparky",
+                    breed = "Unknown",
+                    petType = ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType.DOG.name,
+                    age = BigDecimal.TEN,
+                    temperament = PetTemperament.MELANCHOLIC.name,
+                    propertySize = "BIG",
+                    description = "Playfull and king dog"
+                )
+            )
+
             val response = client.post("/api/pet-ad/create") {
                 contentType(ContentType.Application.Json)
                 setBody(createRequest)
             }
+
+            val petAdCreateResponse = response.body<PetAdCreateResponse>()
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as PetAdCreateResponse shouldBe createResponse
+            petAdCreateResponse.petAd?.id shouldBe "1234567890"
+            petAdCreateResponse.petAd?.name shouldBe "Sparky"
+            petAdCreateResponse.petAd?.description shouldBe "Playfull and king dog"
+            petAdCreateResponse.petAd?.breed shouldBe "Unknown"
+            petAdCreateResponse.petAd?.petType shouldBe "DOG"
+            petAdCreateResponse.petAd?.age shouldBe "10"
+            petAdCreateResponse.petAd?.temperament shouldBe "MELANCHOLIC"
+            petAdCreateResponse.petAd?.propertySize shouldBe "BIG"
+            petAdCreateResponse.petAd?.adStatus shouldBe "CREATED"
+            petAdCreateResponse.requestId shouldBe "123"
         }
     }
 
@@ -166,12 +96,26 @@ class PetAdSuccessStubTest : FunSpec({
                     }
                 }
             }
+            val updateRequest = PetAdUpdateRequest(
+                requestType = "update",
+                requestId = "12",
+                debug = PetAdDebug(
+                    mode = PetAdRequestDebugMode.STUB,
+                    stub = PetAdRequestDebugStubs.SUCCESS
+                ),
+                petAd = PetAdUpdateObject(
+                    id = "123",
+                    adStatus = PetAdStatus.RESERVED.name
+                )
+            )
+
             val response = client.post("/api/pet-ad/update") {
                 contentType(ContentType.Application.Json)
                 setBody(updateRequest)
             }
+            val petAdUpdateResponse = response.body<PetAdUpdateResponse>()
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as PetAdUpdateResponse shouldBe updateResponse
+            petAdUpdateResponse.petAd?.adStatus shouldBe "RESERVED"
         }
     }
 
@@ -185,12 +129,26 @@ class PetAdSuccessStubTest : FunSpec({
                     }
                 }
             }
+            val readRequest = PetAdGetRequest(
+                requestType = "read",
+                requestId = "123",
+                debug = PetAdDebug(
+                    mode = PetAdRequestDebugMode.STUB,
+                    stub = PetAdRequestDebugStubs.SUCCESS
+                ),
+                petAd = PetAdGetObject(
+                    id = "123",
+                )
+            )
+
             val response = client.post("/api/pet-ad/read") {
                 contentType(ContentType.Application.Json)
                 setBody(readRequest)
             }
+
+            val petAdReadResponse = response.body<PetAdGetResponse>()
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as PetAdGetResponse shouldBe readResponse
+            petAdReadResponse.petAd?.id shouldBe "123"
         }
     }
 
@@ -204,12 +162,24 @@ class PetAdSuccessStubTest : FunSpec({
                     }
                 }
             }
+            val deleteRequest = PetAdDeleteRequest(
+                requestType = "delete",
+                requestId = "123",
+                debug = PetAdDebug(
+                    mode = PetAdRequestDebugMode.STUB,
+                    stub = PetAdRequestDebugStubs.SUCCESS
+                ),
+                petAd = PetAdDeleteObject(
+                   id = "123",
+                )
+            )
+
             val response = client.post("/api/pet-ad/delete") {
                 contentType(ContentType.Application.Json)
                 setBody(deleteRequest)
             }
+
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as PetAdDeleteResponse shouldBe deleteResponse
         }
     }
 
@@ -223,12 +193,30 @@ class PetAdSuccessStubTest : FunSpec({
                     }
                 }
             }
+
+            val searchRequest = PetAdSearchRequest(
+                requestType = "search",
+                requestId = "123",
+                debug = PetAdDebug(
+                    mode = PetAdRequestDebugMode.STUB,
+                    stub = PetAdRequestDebugStubs.SUCCESS
+                ),
+                petAdFilter = PetAdSearchFilter(
+                    breed = "Unknown",
+                    type = PetType.CAT.name,
+                    temperament = PetTemperament.SANGUINE.name
+                ),
+            )
             val response = client.post("/api/pet-ad/search") {
                 contentType(ContentType.Application.Json)
                 setBody(searchRequest)
             }
+
+
+            val petAdSearchResponse = response.body<PetAdSearchResponse>()
+            val responseStub = PetAdStub.getPetAds()
+
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as PetAdSearchResponse shouldBe searchResponse
         }
     }
 

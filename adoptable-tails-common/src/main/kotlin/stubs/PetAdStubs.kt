@@ -9,8 +9,8 @@ enum class PetAdStubs {
     CANNOT_DELETE,
     CANNOT_SEARCH,
     BAD_ID,
-    BAD_DESCRIPTION,
-    BAD_TITLE,
-    DB_ERROR,
-    BAD_SEARCH_STRING,
+    BAD_NAME,
+    BAD_AGE,
+    BAD_BREED,
+    DB_ERROR
 }

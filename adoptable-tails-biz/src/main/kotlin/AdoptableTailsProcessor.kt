@@ -1,6 +1,9 @@
 package ru.otus.otuskotlin.adoptabletails.biz
 
 import ru.otus.otuskotlin.adoptabletails.biz.ad.operation
+import ru.otus.otuskotlin.adoptabletails.biz.permissions.accessValidation
+import ru.otus.otuskotlin.adoptabletails.biz.permissions.chainPermissions
+import ru.otus.otuskotlin.adoptabletails.biz.permissions.frontPermissions
 import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryCreate
 import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryDelete
 import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryPrepareCreate
@@ -73,11 +76,14 @@ class AdoptableTailsProcessor(
 
                     finishPetAdValidation("Completion of checks")
                 }
+                chainPermissions("Calculating permissions for the user.")
                 chain {
                     title = "Save logic"
                     repositoryPrepareCreate("Prepare object for saving")
+                    accessValidation("Calculating access rights.")
                     repositoryCreate("Create pet ad in db")
                 }
+                frontPermissions("Calculating user permissions for the frontend.")
                 prepareResult("Prepare response")
             }
 
@@ -100,8 +106,10 @@ class AdoptableTailsProcessor(
 
                     finishPetAdValidation("Completion of checks")
                 }
+                chainPermissions("Calculating permissions for the user.")
                 chain {
                     title = "Read logic"
+                    accessValidation("Calculating access rights.")
                     repositoryRead("Read pet ad from db")
                     worker {
                         title = "Prepare response for Read"
@@ -109,6 +117,7 @@ class AdoptableTailsProcessor(
                         handle { adRepositoryDone = adRepositoryRead }
                     }
                 }
+                frontPermissions("Calculating user permissions for the frontend.")
                 prepareResult("Подготовка ответа")
             }
 
@@ -162,12 +171,15 @@ class AdoptableTailsProcessor(
 
                     finishPetAdValidation("Completion of checks")
                 }
+                chainPermissions("Calculating permissions for the user.")
                 chain {
                     title = "Delete logic"
+                    accessValidation("Calculating access rights.")
                     repositoryRead("Read pet ad from db")
                     repositoryPrepareDelete("Prepare object for deletion")
                     repositoryDelete("Delete pet ad from db")
                 }
+                frontPermissions("Calculating user permissions for the frontend.")
                 prepareResult("Prepare response")
             }
 
@@ -184,8 +196,11 @@ class AdoptableTailsProcessor(
 
                     finishPetAdValidation("Completion of checks")
                 }
+                chainPermissions("Calculating permissions for the user.")
+                accessValidation("Calculating access rights.")
                 repositorySearch("Search per ads in db by filter")
                 prepareResult("Prepare response")
+                frontPermissions("Calculating user permissions for the frontend.")
             }
         }.build()
     }

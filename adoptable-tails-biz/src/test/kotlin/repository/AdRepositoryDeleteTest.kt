@@ -13,6 +13,8 @@ import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonPrincipalModel
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonUserGroups
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdResponse
 import ru.otus.otuskotlin.adoptabletails.repository.tests.AdRepositoryMock
 import java.math.BigDecimal
@@ -72,6 +74,13 @@ class AdRepositoryDeleteTest {
             workMode = AdoptableTailsWorkMode.TEST,
             petAdRequest = PetAd(
                 id = PetAdId(adId),
+            ),
+            principal = CommonPrincipalModel(
+                id = PetAdId("1011"),
+                groups = setOf(
+                    CommonUserGroups.USER,
+                    CommonUserGroups.TEST,
+                )
             ),
         )
 

@@ -12,6 +12,11 @@ val datetimeVersion: String by project
 fun ktor(module: String, prefix: String = "server-", version: String? = this@Build_gradle.ktorVersion): Any =
     "io.ktor:ktor-${prefix.suffixIfNot("-")}$module:$version"
 
+fun ktorServer(module: String, version: String? = this@Build_gradle.ktorVersion): Any =
+    "io.ktor:ktor-server-$module:$version"
+fun ktorClient(module: String, version: String? = this@Build_gradle.ktorVersion): Any =
+    "io.ktor:ktor-client-$module:$version"
+
 plugins {
     kotlin("jvm")
     id("application")
@@ -29,20 +34,21 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(ktor("core"))
-    implementation(ktor("netty"))
+    implementation(ktorServer("core"))
+    implementation(ktorServer("netty"))
 
     implementation(ktor("jackson", prefix = "serialization"))
-    implementation(ktor("content-negotiation"))
+    implementation(ktorServer("content-negotiation"))
 
     implementation(ktor("locations"))
     implementation(ktor("caching-headers"))
-    implementation(ktor("call-logging"))
+    implementation(ktorServer("call-logging"))
     implementation(ktor("auto-head-response"))
     implementation(ktor("cors"))
     implementation(ktor("default-headers"))
     implementation(ktor("websockets"))
 
+    implementation(ktorServer("auth-jwt"))
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation(project(mapOf("path" to ":adoptable-tails-common")))
@@ -61,8 +67,8 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest.extensions:kotest-assertions-ktor:${ktorKotestExtensionVersion}")
-    testImplementation(ktor("test-host"))
-    testImplementation(ktor("content-negotiation", prefix = "client-"))
+    testImplementation(ktorServer("test-host"))
+    testImplementation(ktorClient("content-negotiation"))
     testImplementation(ktor("websockets", prefix = "client-"))
 }
 

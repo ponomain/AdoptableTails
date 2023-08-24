@@ -33,4 +33,5 @@ include("adoptable-tails-api-log")
 include("adoptable-tails-repository-cassandra")
 include("adoptable-tails-repository-stubs")
 include("adoptable-tails-repository-tests")
+include("adoptable-tails-authorization")
 

@@ -11,7 +11,10 @@ import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.testing.*
 import ru.otus.otuskotlin.adoptabletails.api.apiV1Mapper
+import ru.otus.otuskotlin.adoptabletails.app.ktor.authorization.addAuthorization
+import ru.otus.otuskotlin.adoptabletails.app.ktor.configs.KtorAuthConfig
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonUserGroups
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdResponse
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdsResponse
 import ru.otus.otuskotlin.adoptabletails.repository.tests.AdRepositoryMock
@@ -83,6 +86,7 @@ class PetAdSuccessStubTest : FunSpec({
 
             val response = client.post("/api/pet-ad/create") {
                 contentType(ContentType.Application.Json)
+                addAuthorization(id = "123", config = KtorAuthConfig.TEST, groups = listOf(CommonUserGroups.TEST.name))
                 setBody(createRequest)
             }
 
@@ -126,6 +130,7 @@ class PetAdSuccessStubTest : FunSpec({
 
             val response = client.post("/api/pet-ad/update") {
                 contentType(ContentType.Application.Json)
+                addAuthorization(id = "123", config = KtorAuthConfig.TEST, groups = listOf(CommonUserGroups.TEST.name))
                 setBody(updateRequest)
             }
             val petAdUpdateResponse = response.body<PetAdUpdateResponse>()
@@ -167,6 +172,7 @@ class PetAdSuccessStubTest : FunSpec({
 
             val response = client.post("/api/pet-ad/read") {
                 contentType(ContentType.Application.Json)
+                addAuthorization(id = "123", config = KtorAuthConfig.TEST, groups = listOf(CommonUserGroups.TEST.name))
                 setBody(readRequest)
             }
 
@@ -215,6 +221,7 @@ class PetAdSuccessStubTest : FunSpec({
 
             val response = client.post("/api/pet-ad/delete") {
                 contentType(ContentType.Application.Json)
+                addAuthorization(id = "123", config = KtorAuthConfig.TEST, groups = listOf(CommonUserGroups.TEST.name))
                 setBody(deleteRequest)
             }
 
@@ -262,9 +269,9 @@ class PetAdSuccessStubTest : FunSpec({
             )
             val response = client.post("/api/pet-ad/search") {
                 contentType(ContentType.Application.Json)
+                addAuthorization(id = "123", config = KtorAuthConfig.TEST, groups = listOf(CommonUserGroups.TEST.name))
                 setBody(searchRequest)
             }
-
 
             val petAdSearchResponse = response.body<PetAdSearchResponse>()
             val responseStub = PetAdStub.getPetAds()

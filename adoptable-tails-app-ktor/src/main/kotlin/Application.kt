@@ -1,6 +1,7 @@
 package ru.otus.otuskotlin.adoptabletails.app.ktor
 
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
 import ru.otus.otuskotlin.adoptabletails.app.ktor.app.petAd
@@ -14,8 +15,10 @@ fun Application.module(appSettings: AdoptableTailsAppSettings = initAppSettings(
     initPlugins(appSettings)
 
     routing {
-        route("api") {
-            petAd(appSettings)
+        authenticate("auth-jwt") {
+            route("api/v1") {
+                petAd(appSettings)
+            }
         }
     }
 }

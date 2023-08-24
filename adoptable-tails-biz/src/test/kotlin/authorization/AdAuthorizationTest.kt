@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.adoptabletails.biz.repository
+package ru.otus.otuskotlin.adoptabletails.biz.authorization
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -22,7 +22,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
-class AdRepositoryCreateTest {
+@OptIn(ExperimentalCoroutinesApi::class)
+class AdAuthorizationTest {
     private val command = AdoptableTailsCommand.CREATE
     private val adId = "10000000-0000-0000-0000-000000000001"
     private val createdAt = Instant.parse("2023-03-03T08:05:57Z");
@@ -52,7 +53,7 @@ class AdRepositoryCreateTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun repositoryCreateSuccessTest() = runTest {
+    fun createSuccessTest() = runTest {
         val context = AdoptableTailsContext(
             command = command,
             state = AdoptableTailsState.NONE,
@@ -89,4 +90,5 @@ class AdRepositoryCreateTest {
         assertEquals("Cute and king cat", context.petAdResponse.description)
         assertEquals(Instant.parse("2023-03-03T08:05:57Z"), context.petAdResponse.createdAt)
     }
+
 }

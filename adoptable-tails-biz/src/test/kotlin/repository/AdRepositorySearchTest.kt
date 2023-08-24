@@ -14,6 +14,8 @@ import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdFilter
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonPrincipalModel
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonUserGroups
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdsResponse
 import ru.otus.otuskotlin.adoptabletails.repository.tests.AdRepositoryMock
 import java.math.BigDecimal
@@ -61,6 +63,13 @@ class AdRepositorySearchTest {
                 type = PetType.CAT,
                 temperament = PetTemperament.CHOLERIC,
                 breed = "Maine coon"
+            ),
+            principal = CommonPrincipalModel(
+                id = PetAdId(adId),
+                groups = setOf(
+                    CommonUserGroups.USER,
+                    CommonUserGroups.TEST,
+                )
             ),
         )
 

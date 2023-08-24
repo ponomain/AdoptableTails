@@ -7,7 +7,7 @@ ktor:
   watch:
     - classes
     - resources
-crypto:
+adoptable-tails:
   repository:
     test: "cassandra"
     prod: "cassandra"
@@ -17,3 +17,11 @@ crypto:
       keyspace: test_keyspace
       username: cassandra
       password: cassandra
+
+
+jwt:
+  issuer: "http://localhost:8081/auth/realms/adoptable-tails-exchange"
+  audience: "ad-user"
+  realm: "adoptable-tails-realm"
+  clientId: "adoptable-tails-ad"
+  certUrl: "http://localhost:8081/auth/realms/crypto-exchange/protocol/openid-connect/certs" # TODO()

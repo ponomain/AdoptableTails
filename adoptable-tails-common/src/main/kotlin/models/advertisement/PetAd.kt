@@ -3,6 +3,8 @@ package ru.otus.otuskotlin.adoptabletails.common.models.advertisement
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import ru.otus.otuskotlin.adoptabletails.common.NONE
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonAdPermissionClient
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonPrincipalRelations
 import java.math.BigDecimal
 
 data class PetAd(
@@ -16,5 +18,12 @@ data class PetAd(
     var description: String = "",
     var createdAt: Instant = Clock.System.now(),
     var updatedAt: Instant = Instant.NONE,
-    var petAdStatus: PetAdStatus = PetAdStatus.CREATED
-)
+    var petAdStatus: PetAdStatus = PetAdStatus.CREATED,
+    var principalRelations: Set<CommonPrincipalRelations> = emptySet(),
+    val permissionsClient: MutableSet<CommonAdPermissionClient> = mutableSetOf()
+) {
+    fun deepCopy(): PetAd = copy(
+        principalRelations = principalRelations.toSet(),
+        permissionsClient = permissionsClient.toMutableSet(),
+    )
+}

@@ -53,6 +53,9 @@ dependencies {
     implementation(project(mapOf("path" to ":adoptable-tails-lib-logback")))
     implementation(project(mapOf("path" to ":adoptable-tails-mappers-log")))
     implementation(project(mapOf("path" to ":adoptable-tails-api-log")))
+    implementation(project(mapOf("path" to ":adoptable-tails-repository-cassandra")))
+    implementation(project(mapOf("path" to ":adoptable-tails-repository-stubs")))
+    implementation(project(mapOf("path" to ":adoptable-tails-repository-tests")))
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")

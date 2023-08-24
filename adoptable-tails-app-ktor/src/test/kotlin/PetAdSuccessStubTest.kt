@@ -11,6 +11,10 @@ import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.testing.*
 import ru.otus.otuskotlin.adoptabletails.api.apiV1Mapper
+import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
+import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdResponse
+import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdsResponse
+import ru.otus.otuskotlin.adoptabletails.repository.tests.AdRepositoryMock
 import ru.otus.otuskotlin.adoptabletails.stubs.PetAdStub
 import ru.otus.otuskotlin.api.models.PetAdCreateObject
 import ru.otus.otuskotlin.api.models.PetAdCreateRequest
@@ -18,7 +22,6 @@ import ru.otus.otuskotlin.api.models.PetAdCreateResponse
 import ru.otus.otuskotlin.api.models.PetAdDebug
 import ru.otus.otuskotlin.api.models.PetAdDeleteObject
 import ru.otus.otuskotlin.api.models.PetAdDeleteRequest
-import ru.otus.otuskotlin.api.models.PetAdDeleteResponse
 import ru.otus.otuskotlin.api.models.PetAdGetObject
 import ru.otus.otuskotlin.api.models.PetAdGetRequest
 import ru.otus.otuskotlin.api.models.PetAdGetResponse
@@ -38,8 +41,20 @@ import java.math.BigDecimal
 @Test
 class PetAdSuccessStubTest : FunSpec({
 
+    val stub = PetAdStub.getPetAd()
+    val adId = stub.id
+
     test("Create request success stub") {
         testApplication {
+            val repo = AdRepositoryMock(
+                invokeCreateAd = {
+                    DbAdResponse(
+                        isSuccess = true,
+                        data = it.ad.copy(id = adId),
+                    )
+                }
+            )
+            application { module(testSettings(repo)) }
             val client = createClient {
                 install(ContentNegotiation) {
                     jackson {
@@ -121,6 +136,15 @@ class PetAdSuccessStubTest : FunSpec({
 
     test("read success stub") {
         testApplication {
+            val repo = AdRepositoryMock(
+                invokeReadAd = {
+                    DbAdResponse(
+                        isSuccess = true,
+                        data = PetAd(id = it.id)
+                    )
+                }
+            )
+            application { module(testSettings(repo)) }
             val client = createClient {
                 install(ContentNegotiation) {
                     jackson {
@@ -154,6 +178,21 @@ class PetAdSuccessStubTest : FunSpec({
 
     test("delete success stub") {
         testApplication {
+            val repo = AdRepositoryMock(
+                invokeReadAd = {
+                    DbAdResponse(
+                        isSuccess = true,
+                        data = PetAd(id = it.id)
+                    )
+                },
+                invokeDeleteAd = {
+                    DbAdResponse(
+                        isSuccess = true,
+                        data = PetAd(id = it.id)
+                    )
+                }
+            )
+            application { module(testSettings(repo)) }
             val client = createClient {
                 install(ContentNegotiation) {
                     jackson {
@@ -170,7 +209,7 @@ class PetAdSuccessStubTest : FunSpec({
                     stub = PetAdRequestDebugStubs.SUCCESS
                 ),
                 petAd = PetAdDeleteObject(
-                   id = "123",
+                    id = "123",
                 )
             )
 
@@ -185,6 +224,20 @@ class PetAdSuccessStubTest : FunSpec({
 
     test("search success stub") {
         testApplication {
+            val repo = AdRepositoryMock(
+                invokeSearchAd = {
+                    DbAdsResponse(
+                        isSuccess = true,
+                        data = listOf(
+                            PetAd(
+                                petType = it.type,
+                                temperament = it.temperament
+                            )
+                        )
+                    )
+                }
+            )
+            application { module(testSettings(repo)) }
             val client = createClient {
                 install(ContentNegotiation) {
                     jackson {

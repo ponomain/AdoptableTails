@@ -1,13 +1,19 @@
 ktor:
-  development: true
+  application:
+    modules:
+      - ru.otus.otuskotlin.adoptabletails.app.ktor.ApplicationKt.module
   deployment:
-    port: 8080
+    port: 7102
   watch:
     - classes
     - resources
-  application:
-    modules:
-      - "ru.otus.otuskotlin.adoptabletails.app.ktor.ApplicationKt.module"
-  urls:
-    - "http://127.0.0.1:8080/"
-    - "http://0.0.0.0:8080/"
+crypto:
+  repository:
+    test: "cassandra"
+    prod: "cassandra"
+    cassandra:
+      hosts: localhost
+      port: 9042
+      keyspace: test_keyspace
+      username: cassandra
+      password: cassandra

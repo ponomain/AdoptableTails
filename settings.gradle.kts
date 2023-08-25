@@ -30,4 +30,7 @@ include("adoptable-tails-lib-log-common")
 include("adoptable-tails-lib-logback")
 include("adoptable-tails-mappers-log")
 include("adoptable-tails-api-log")
+include("adoptable-tails-repository-cassandra")
+include("adoptable-tails-repository-stubs")
+include("adoptable-tails-repository-tests")
 

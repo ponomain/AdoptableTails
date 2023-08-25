@@ -8,23 +8,32 @@ import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsState
 import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsWorkMode
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdFilter
+import ru.otus.otuskotlin.adoptabletails.common.repository.AdRepository
 import ru.otus.otuskotlin.adoptabletails.common.stubs.PetAdStubs
 
-data class AdoptableTailsContext (
-    var command : AdoptableTailsCommand = AdoptableTailsCommand.NONE,
-    var state : AdoptableTailsState = AdoptableTailsState.NONE,
-    var errors :MutableList<AdoptableTailsError> = mutableListOf(),
+data class AdoptableTailsContext(
+    var command: AdoptableTailsCommand = AdoptableTailsCommand.NONE,
+    var state: AdoptableTailsState = AdoptableTailsState.NONE,
+    var errors: MutableList<AdoptableTailsError> = mutableListOf(),
 
-    var workMode : AdoptableTailsWorkMode = AdoptableTailsWorkMode.PROD,
+    var workMode: AdoptableTailsWorkMode = AdoptableTailsWorkMode.PROD,
     var stub: PetAdStubs = PetAdStubs.NONE,
     var requestId: AdoptableTailsRequestId = AdoptableTailsRequestId.NONE,
-    var timeStart : Instant = Instant.NONE,
+    var timeStart: Instant = Instant.NONE,
+
+    var settings: AdoptableTailsCorSettings = AdoptableTailsCorSettings(),
 
     var petAdFilter: PetAdFilter = PetAdFilter(),
-    var petAdRequest : PetAd = PetAd(),
+    var petAdRequest: PetAd = PetAd(),
 
-    var petAdResponse :PetAd = PetAd(),
-    var petAdsResponse :MutableList<PetAd> = mutableListOf(),
+    var petAdResponse: PetAd = PetAd(),
+    var petAdsResponse: MutableList<PetAd> = mutableListOf(),
+
+    var adRepository: AdRepository = AdRepository.NONE,
+    var adRepositoryRead: PetAd = PetAd(),
+    var adRepositoryPrepare: PetAd = PetAd(),
+    var adRepositoryDone: PetAd = PetAd(),
+    var adsRepositoryDone: MutableList<PetAd> = mutableListOf(),
 
     var petAdValidating: PetAd = PetAd(),
     var petAdFilterValidating: PetAdFilter = PetAdFilter(),

@@ -17,6 +17,10 @@ dependencies {
     implementation(project(":adoptable-tails-lib-cor"))
     implementation(project(":adoptable-tails-common"))
     implementation(project(":adoptable-tails-stubs"))
+    implementation(project(":adoptable-tails-repository-cassandra"))
+    implementation(project(":adoptable-tails-repository-stubs"))
+    implementation(project(":adoptable-tails-repository-tests"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
 }
 

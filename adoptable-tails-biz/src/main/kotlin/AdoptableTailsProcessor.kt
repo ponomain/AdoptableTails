@@ -1,6 +1,12 @@
 package ru.otus.otuskotlin.adoptabletails.biz
 
 import ru.otus.otuskotlin.adoptabletails.biz.ad.operation
+import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryCreate
+import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryDelete
+import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryPrepareCreate
+import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryPrepareDelete
+import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryRead
+import ru.otus.otuskotlin.adoptabletails.biz.repository.repositorySearch
 import ru.otus.otuskotlin.adoptabletails.biz.validation.finishPetAdValidation
 import ru.otus.otuskotlin.adoptabletails.biz.validation.validateIdNotEmpty
 import ru.otus.otuskotlin.adoptabletails.biz.validation.validateIdProperFormat
@@ -9,6 +15,7 @@ import ru.otus.otuskotlin.adoptabletails.biz.validation.validatePetAdBreed
 import ru.otus.otuskotlin.adoptabletails.biz.validation.validatePetAdName
 import ru.otus.otuskotlin.adoptabletails.biz.validation.validation
 import ru.otus.otuskotlin.adoptabletails.biz.workers.initStatus
+import ru.otus.otuskotlin.adoptabletails.biz.workers.prepareResult
 import ru.otus.otuskotlin.adoptabletails.biz.workers.stubs.stubCreateSuccess
 import ru.otus.otuskotlin.adoptabletails.biz.workers.stubs.stubDbError
 import ru.otus.otuskotlin.adoptabletails.biz.workers.stubs.stubDeleteSuccess
@@ -22,13 +29,21 @@ import ru.otus.otuskotlin.adoptabletails.biz.workers.stubs.stubValidationBadId
 import ru.otus.otuskotlin.adoptabletails.biz.workers.stubs.stubValidationBadName
 import ru.otus.otuskotlin.adoptabletails.biz.workers.stubs.stubs
 import ru.otus.otuskotlin.adoptabletails.common.AdoptableTailsContext
+import ru.otus.otuskotlin.adoptabletails.common.AdoptableTailsCorSettings
 import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsCommand
+import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsState
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
+import ru.otus.otuskotlin.adoptabletails.lib.cor.dsl.handlers.chain
+import ru.otus.otuskotlin.adoptabletails.lib.cor.dsl.handlers.handle
+import ru.otus.otuskotlin.adoptabletails.lib.cor.dsl.handlers.on
 import ru.otus.otuskotlin.adoptabletails.lib.cor.dsl.handlers.rootChain
 import ru.otus.otuskotlin.adoptabletails.lib.cor.dsl.handlers.worker
 
-class AdoptableTailsProcessor {
-    suspend fun exec(ctx: AdoptableTailsContext) = BusinessChain.exec(ctx)
+class AdoptableTailsProcessor(
+    private val settings: AdoptableTailsCorSettings = AdoptableTailsCorSettings()
+) {
+    suspend fun exec(ctx: AdoptableTailsContext) =
+        BusinessChain.exec(ctx.apply { settings = this@AdoptableTailsProcessor.settings })
 
     companion object {
         private val BusinessChain = rootChain<AdoptableTailsContext> {
@@ -58,6 +73,12 @@ class AdoptableTailsProcessor {
 
                     finishPetAdValidation("Completion of checks")
                 }
+                chain {
+                    title = "Save logic"
+                    repositoryPrepareCreate("Prepare object for saving")
+                    repositoryCreate("Create pet ad in db")
+                }
+                prepareResult("Prepare response")
             }
 
             operation("Receive product group", AdoptableTailsCommand.READ) {
@@ -79,6 +100,16 @@ class AdoptableTailsProcessor {
 
                     finishPetAdValidation("Completion of checks")
                 }
+                chain {
+                    title = "Read logic"
+                    repositoryRead("Read pet ad from db")
+                    worker {
+                        title = "Prepare response for Read"
+                        on { state == AdoptableTailsState.RUNNING }
+                        handle { adRepositoryDone = adRepositoryRead }
+                    }
+                }
+                prepareResult("Подготовка ответа")
             }
 
             operation("Change product group", AdoptableTailsCommand.UPDATE) {
@@ -131,6 +162,13 @@ class AdoptableTailsProcessor {
 
                     finishPetAdValidation("Completion of checks")
                 }
+                chain {
+                    title = "Delete logic"
+                    repositoryRead("Read pet ad from db")
+                    repositoryPrepareDelete("Prepare object for deletion")
+                    repositoryDelete("Delete pet ad from db")
+                }
+                prepareResult("Prepare response")
             }
 
             operation("Search product group", AdoptableTailsCommand.SEARCH) {
@@ -146,6 +184,8 @@ class AdoptableTailsProcessor {
 
                     finishPetAdValidation("Completion of checks")
                 }
+                repositorySearch("Search per ads in db by filter")
+                prepareResult("Prepare response")
             }
         }.build()
     }

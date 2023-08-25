@@ -111,11 +111,23 @@ services:
       - kafka
     environment:
       KAFKA_HOSTS: kafka:9092
-      KAFKA_TOPIC_IN_MEETING: in-meeting
-      KAFKA_TOPIC_OUT_MEETING: out-meeting
-      KAFKA_TOPIC_IN_SLOT: in-slot
-      KAFKA_TOPIC_OUT_SLOT: out-slot
-      KAFKA_GROUP_ID: adoptabletails
+      KAFKA_TOPIC_IN_V1: adoptable-tails-in-v1
+      KAFKA_TOPIC_OUT_V1: out-slot
+      KAFKA_GROUP_ID: adoptable-tails-out-v1
 
+  cassandra:
+    image: cassandra:4.1.2
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_PASSWORD=cassandra
+
+  adoptable-tails-exchange:
+    image: adoptable-tails-app-ktor:latest
+    ports:
+      - "7101:7101"
+    depends_on:
+      - cassandra
 volumes:
   opensearch-data:

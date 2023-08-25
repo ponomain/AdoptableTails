@@ -29,13 +29,14 @@ repositories {
 }
 
 application {
-    mainClass.set("package ru.otus.otuskotlin.adoptabletails.app.ktor.ApplicationKt")
+    mainClass.set("ru.otus.otuskotlin.adoptabletails.app.ktor.ApplicationKt")
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(ktorServer("core"))
     implementation(ktorServer("netty"))
+    implementation(ktorServer("config-yaml"))
 
     implementation(ktor("jackson", prefix = "serialization"))
     implementation(ktorServer("content-negotiation"))

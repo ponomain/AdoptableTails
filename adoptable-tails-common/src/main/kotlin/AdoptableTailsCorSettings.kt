@@ -10,6 +10,6 @@ data class AdoptableTailsCorSettings(
     var repositoryProd: AdRepository = AdRepository.NONE
 ) {
     companion object {
-        val NONE = AdoptableTailsCorSettings
+        val NONE = AdoptableTailsCorSettings()
     }
 }

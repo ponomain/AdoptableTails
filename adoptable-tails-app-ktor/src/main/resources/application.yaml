@@ -24,4 +24,4 @@ jwt:
   audience: "ad-user"
   realm: "adoptable-tails-realm"
   clientId: "adoptable-tails-ad"
-  certUrl: "http://localhost:8081/auth/realms/crypto-exchange/protocol/openid-connect/certs" # TODO()
+  certUrl: "http://localhost:8081/auth/realms/adoptable-tails-exchange/protocol/openid-connect/certs" # TODO()

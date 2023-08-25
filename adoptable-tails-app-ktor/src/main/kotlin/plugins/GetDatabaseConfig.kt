@@ -13,7 +13,7 @@ fun Application.getDatabaseConf(type: AdDbType): AdRepository {
     return when (dbSettings) {
         "cassandra" -> initCassandra()
         else -> throw IllegalArgumentException(
-            "$dbSettingPath must be set in application.yml to one of: " +
+            "$dbSettingPath must be set in application.yaml to one of: " +
                     "'cassandra'"
         )
     }

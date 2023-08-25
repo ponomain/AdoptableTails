@@ -16,7 +16,7 @@ fun Application.module(appSettings: AdoptableTailsAppSettings = initAppSettings(
 
     routing {
         authenticate("auth-jwt") {
-            route("api/v1") {
+            route("api") {
                 petAd(appSettings)
             }
         }

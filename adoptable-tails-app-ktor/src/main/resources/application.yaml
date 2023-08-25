@@ -19,8 +19,8 @@ adoptable-tails:
       password: cassandra
 
 jwt:
-  issuer: "adoptable-tails-exchange"
+  secret: "secret"
+  issuer: "adoptable-tails"
   audience: "ad-user"
-  realm: "adoptable-tails-exchange-realm"
-  clientId: "adoptable-tails-exchange-ad"
-  certUrl: "http://localhost:8081/auth/realms/crypto-exchange/protocol/openid-connect/certs" # TODO()
+  realm: "adoptable-tails-realm"
+  clientId: "adoptable-tails-ad"

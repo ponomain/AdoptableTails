@@ -12,7 +12,7 @@ class AuthorizationTest {
         application { module(testSettings()) }
 
 
-        val response = client.post("api/v1/pet-ad/create") {
+        val response = client.post("api/pet-ad/create") {
             addAuthorization(id = "test", config = KtorAuthConfig.TEST.copy(audience = "invalid"), groups = listOf())
         }
 

@@ -9,6 +9,6 @@ fun <T : AdoptableTailsContext> T.addError(group: String, code: String, field: S
 }
 
 
-fun PetAdStub.createMeeting(block: PetAd.() -> Unit) = getPetAd().copy().apply { block() }
+fun PetAdStub.createMeeting(block: PetAd.() -> Unit) = getPetAd().deepCopy().apply { block() }
 
-fun PetAdStub.updateMeeting(block: PetAd.() -> Unit) = getPetAd().copy().apply { block() }
+fun PetAdStub.updateMeeting(block: PetAd.() -> Unit) = getPetAd().deepCopy().apply { block() }

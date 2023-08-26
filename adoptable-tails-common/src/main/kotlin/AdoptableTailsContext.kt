@@ -8,6 +8,8 @@ import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsState
 import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsWorkMode
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdFilter
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonPrincipalModel
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonUserPermissions
 import ru.otus.otuskotlin.adoptabletails.common.repository.AdRepository
 import ru.otus.otuskotlin.adoptabletails.common.stubs.PetAdStubs
 
@@ -40,4 +42,8 @@ data class AdoptableTailsContext(
 
     var petAdValidated: PetAd = PetAd(),
     var petAdFilterValidated: PetAdFilter = PetAdFilter(),
+
+    var principal: CommonPrincipalModel = CommonPrincipalModel.NONE,
+    val permissionsChain: MutableSet<CommonUserPermissions> = mutableSetOf(),
+    var permitted: Boolean = false
 )

@@ -14,6 +14,8 @@ import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonPrincipalModel
+import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonUserGroups
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdResponse
 import ru.otus.otuskotlin.adoptabletails.repository.tests.AdRepositoryMock
 import java.math.BigDecimal
@@ -60,7 +62,14 @@ fun repositoryNotFoundTest(command: AdoptableTailsCommand) = runTest {
         workMode = AdoptableTailsWorkMode.TEST,
         petAdRequest = PetAd(
             id = PetAdId("12345"),
-        )
+        ),
+        principal = CommonPrincipalModel(
+            id = PetAdId("123"),
+            groups = setOf(
+                CommonUserGroups.USER,
+                CommonUserGroups.TEST,
+            )
+        ),
     )
 
     processor.exec(context)

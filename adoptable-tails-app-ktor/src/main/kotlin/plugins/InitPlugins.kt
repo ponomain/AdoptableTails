@@ -22,7 +22,7 @@ fun Application.initPlugins(appSettings: AdoptableTailsAppSettings) {
     install(DefaultHeaders)
     install(AutoHeadResponse)
     install(CORS)
-
+    configureAuthorization(appSettings)
     install(ContentNegotiation) {
         jackson {
             setConfig(apiV1Mapper.serializationConfig)

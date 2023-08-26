@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":adoptable-tails-repository-cassandra"))
     implementation(project(":adoptable-tails-repository-stubs"))
     implementation(project(":adoptable-tails-repository-tests"))
+    implementation(project(":adoptable-tails-authorization"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
 }

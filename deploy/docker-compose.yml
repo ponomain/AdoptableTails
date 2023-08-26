@@ -7,24 +7,11 @@ version: '3'
 services:
 
   app:
-    image: nginx:latest
+    image: adoptable-tails-app-ktor:latest
     ports:
-      - "8080:80"
+      - "7101:7101"
     depends_on:
-      - fluent-bit
-    volumes:
-      - ./volumes/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./volumes/nginx/nginx.conf:/etc/nginx/nginx.conf
-    logging:
-      # используемый драйвер логгирования
-      driver: "fluentd"
-      options:
-        # куда посылать лог-сообщения, необходимо чтобы адрес
-        # совпадал с настройками плагина forward
-        fluentd-address: localhost:24224
-        # теги используются для маршрутизации лог-сообщений, тема
-        # маршрутизации будет рассмотрена ниже
-        tag: app.logs
+      - cassandra
 
   fluent-bit:
     container_name: fluent-bit
@@ -111,11 +98,17 @@ services:
       - kafka
     environment:
       KAFKA_HOSTS: kafka:9092
-      KAFKA_TOPIC_IN_MEETING: in-meeting
-      KAFKA_TOPIC_OUT_MEETING: out-meeting
-      KAFKA_TOPIC_IN_SLOT: in-slot
-      KAFKA_TOPIC_OUT_SLOT: out-slot
-      KAFKA_GROUP_ID: adoptabletails
+      KAFKA_TOPIC_IN_V1: adoptable-tails-in-v1
+      KAFKA_TOPIC_OUT_V1: out-slot
+      KAFKA_GROUP_ID: adoptable-tails-out-v1
+
+  cassandra:
+    image: cassandra:4.1.2
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_PASSWORD=cassandra
 
 volumes:
   opensearch-data:

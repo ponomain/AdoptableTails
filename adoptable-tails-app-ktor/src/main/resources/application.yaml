@@ -3,17 +3,24 @@ ktor:
     modules:
       - ru.otus.otuskotlin.adoptabletails.app.ktor.ApplicationKt.module
   deployment:
-    port: 7102
+    port: 7101
   watch:
     - classes
     - resources
-crypto:
+adoptable-tails:
   repository:
     test: "cassandra"
     prod: "cassandra"
     cassandra:
-      hosts: localhost
+      host: cassandra
       port: 9042
       keyspace: test_keyspace
       username: cassandra
       password: cassandra
+
+jwt:
+  secret: "secret"
+  issuer: "adoptable-tails"
+  audience: "ad-user"
+  realm: "adoptable-tails-realm"
+  clientId: "adoptable-tails-ad"

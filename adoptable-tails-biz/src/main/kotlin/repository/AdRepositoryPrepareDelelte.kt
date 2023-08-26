@@ -12,6 +12,6 @@ fun CorChainDsl<AdoptableTailsContext>.repositoryPrepareDelete(title: String) = 
     description = "Prepare data before deleting from DB"
     on { state == AdoptableTailsState.RUNNING }
     handle {
-        adRepositoryPrepare = petAdValidated.copy()
+        adRepositoryPrepare = petAdValidated.deepCopy()
     }
 }

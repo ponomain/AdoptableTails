@@ -8,7 +8,6 @@ import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdFilter
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
-import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
 import ru.otus.otuskotlin.api.log.models.CommonLogModel
 import ru.otus.otuskotlin.api.log.models.ErrorLogModel
 import ru.otus.otuskotlin.api.log.models.PetAdFilterLog
@@ -39,7 +38,7 @@ fun AdoptableTailsContext.toLog(): PetAdLogModel? {
 }
 
 private fun PetAdFilter.toLog() = PetAdFilterLog(
-    petType = type.takeIf { it != PetType.NONE }.toString(),
+    petType = type.takeIf { it.isNotBlank() }.toString(),
     temperament = temperament.takeIf { it != PetTemperament.NONE }.toString()
 )
 

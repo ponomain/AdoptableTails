@@ -5,6 +5,6 @@ enum class CommonUserPermissions {
 
     READ_OWN,
     READ_ALL,
-
-    DELETE_OWN,
+    UPDATE_ALL,
+    DELETE_ALL,
 }

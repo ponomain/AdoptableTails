@@ -53,7 +53,6 @@ class KafkaControllerTest {
                                 name = "Some Name",
                                 description = "some testing order to check them all",
                                 breed = "some breed",
-                                petType = PetType.DOG.name,
                                 age = BigDecimal.TEN,
                                 temperament = PetTemperament.SANGUINE.name,
                                 propertySize = "above average"

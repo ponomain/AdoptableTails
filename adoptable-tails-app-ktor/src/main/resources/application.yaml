@@ -3,7 +3,7 @@ ktor:
     modules:
       - ru.otus.otuskotlin.adoptabletails.app.ktor.ApplicationKt.module
   deployment:
-    port: 7101
+    port: 8080
   watch:
     - classes
     - resources
@@ -19,8 +19,8 @@ adoptable-tails:
       password: cassandra
 
 jwt:
-  secret: "secret"
-  issuer: "adoptable-tails"
-  audience: "ad-user"
-  realm: "adoptable-tails-realm"
-  clientId: "adoptable-tails-ad"
+  issuer: "http://localhost:8081/auth/realms/adoptable-tails"
+  audience: "ad-users"
+  realm: "adoptable-tails"
+  clientId: "adoptable-tails-client"
+  certUrl: "http://keycloak:8080/auth/realms/adoptable-tails/protocol/openid-connect/certs"

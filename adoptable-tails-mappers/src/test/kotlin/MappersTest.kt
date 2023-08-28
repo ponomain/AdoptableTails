@@ -9,7 +9,6 @@ import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsState
 import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsWorkMode
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
-import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
 import ru.otus.otuskotlin.adoptabletails.common.stubs.PetAdStubs
 import ru.otus.otuskotlin.adoptabletails.mappers.mapper.fromTransportPetAd
 import ru.otus.otuskotlin.adoptabletails.mappers.mapper.toTransportPetAd
@@ -38,7 +37,6 @@ class MappersTest {
                 description = "test description",
                 age = BigDecimal.valueOf(3),
                 breed = "test breed",
-                petType = "DOG",
                 temperament = "PHLEGMATIC",
                 propertySize = "medium"
             ),
@@ -53,7 +51,6 @@ class MappersTest {
         assertEquals("test description", context.petAdRequest.description)
         assertEquals(BigDecimal.valueOf(3), context.petAdRequest.age)
         assertEquals("test breed", context.petAdRequest.breed)
-        assertEquals(PetType.DOG, context.petAdRequest.petType)
         assertEquals(PetTemperament.PHLEGMATIC, context.petAdRequest.temperament)
         assertEquals("medium", context.petAdRequest.size)
     }
@@ -68,7 +65,6 @@ class MappersTest {
                 description = "test description",
                 age = BigDecimal.ONE,
                 breed = "test breed",
-                petType = PetType.DOG,
                 temperament = PetTemperament.MELANCHOLIC,
                 size = "big",
             ),
@@ -91,7 +87,6 @@ class MappersTest {
         assertEquals("test description", req.petAd?.description)
         assertEquals(BigDecimal.ONE, req.petAd?.age)
         assertEquals("test breed", req.petAd?.breed)
-        assertEquals("DOG", req.petAd?.petType)
         assertEquals("MELANCHOLIC", req.petAd?.temperament)
         assertEquals("big", req.petAd?.propertySize)
 

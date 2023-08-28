@@ -1,16 +1,15 @@
 package ru.otus.otuskotlin.adoptabletails.repository.tests
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.datetime.Instant
 import org.junit.Test
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdStatus
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
-import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
 import ru.otus.otuskotlin.adoptabletails.common.repository.AdRepository
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdRequest
 import java.math.BigDecimal
+import java.time.Instant
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
@@ -21,7 +20,6 @@ abstract class RepositoryAdCreateTest {
     private val createObject = PetAd(
         name = "Sparky",
         breed = "Hasky",
-        petType = PetType.DOG,
         age = BigDecimal(4.7),
         temperament = PetTemperament.SANGUINE,
         description = "Good doggy",
@@ -41,7 +39,6 @@ abstract class RepositoryAdCreateTest {
         assertEquals(expected.breed, result.data?.breed)
         assertEquals(expected.description, result.data?.description)
         assertEquals(expected.age, result.data?.age)
-        assertEquals(expected.petType, result.data?.petType)
         assertEquals(expected.size, result.data?.size)
         assertEquals(expected.petAdStatus, result.data?.petAdStatus)
         assertNotEquals(PetAdId.NONE, result.data?.id)

@@ -5,6 +5,7 @@ import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdFilterRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdIdRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdResponse
+import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdUpdateRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdsResponse
 import ru.otus.otuskotlin.adoptabletails.stubs.PetAdStub
 
@@ -17,6 +18,13 @@ class AdRepositoryStub : AdRepository {
     }
 
     override suspend fun readAd(rq: DbAdIdRequest): DbAdResponse {
+        return DbAdResponse(
+            data = PetAdStub.getPetAd(),
+            isSuccess = true
+        )
+    }
+
+    override suspend fun updateAd(rq: DbAdUpdateRequest): DbAdResponse {
         return DbAdResponse(
             data = PetAdStub.getPetAd(),
             isSuccess = true

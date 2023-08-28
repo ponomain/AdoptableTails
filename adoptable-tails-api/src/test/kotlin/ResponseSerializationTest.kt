@@ -20,7 +20,6 @@ class ResponseSerializationTest {
             name = "Mike",
             description = "Good and kind cat",
             breed = "maine-coon",
-            petType = PetType.CAT.name,
             age = BigDecimal.ONE,
             temperament = PetTemperament.SANGUINE.name,
             propertySize = "big",
@@ -37,7 +36,6 @@ class ResponseSerializationTest {
         assertContains(json, Regex("\"name\":\\s*\"Mike\""))
         assertContains(json, Regex("\"description\":\\s*\"Good and kind cat\""))
         assertContains(json, Regex("\"breed\":\\s*\"maine-coon\""))
-        assertContains(json, Regex("\"petType\":\\s*\"CAT\""))
         assertContains(json, Regex("\"age\":\\d*1"))
         assertContains(json, Regex("\"temperament\":\\s*\"SANGUINE\""))
         assertContains(json, Regex("\"size\":\\s*\"big\""))

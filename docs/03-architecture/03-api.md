@@ -9,19 +9,14 @@
 1. id - id of the record
 2. name - name of the pet
 3. breed - breed of the pet
-4. petType - type of the pet (PetType)
-5. age - age of the pet
-6. temperament - temperament of the pet (PetTemperament)
-7. size - size of the pet
-8. description - description of the pet
-9. createdAt - date of record creation
-10. updatedAt - date of record update
-11. adStatus - status of the ad (PetAdStatus)
+4. age - age of the pet
+5. temperament - temperament of the pet (PetTemperament)
+6. size - size of the pet
+7. description - description of the pet
+8. createdAt - date of record creation 
+9. updatedAt - date of record update 
+10. adStatus - status of the ad (PetAdStatus)
 
-## PetType Enum
-
-1. DOG
-2. CAT
 
 ## PetAdStatus Enum
 

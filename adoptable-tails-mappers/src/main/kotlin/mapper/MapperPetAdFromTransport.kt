@@ -9,7 +9,6 @@ import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdFilter
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdStatus
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
-import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
 import ru.otus.otuskotlin.adoptabletails.common.stubs.PetAdStubs
 import ru.otus.otuskotlin.adoptabletails.mappers.exception.UnsupportedClassException
 import ru.otus.otuskotlin.api.models.IRequest
@@ -99,15 +98,10 @@ private fun AdoptableTailsContext.fromTransportPetAd(request: PetAdSearchRequest
 
 private fun PetAdSearchFilter?.toInternal(): PetAdFilter = PetAdFilter(
     breed = this?.breed ?: "",
-    type = this?.type.fromTransportType(),
+    type = this?.type ?: "",
     temperament = this?.temperament.fromTransportTemperament()
 )
 
-private fun String?.fromTransportType(): PetType = when (this) {
-    "DOG" -> PetType.DOG
-    "CAT" -> PetType.CAT
-    else -> PetType.NONE
-}
 
 private fun String?.fromTransportTemperament(): PetTemperament = when (this) {
     "SANGUINE" -> PetTemperament.SANGUINE
@@ -121,7 +115,6 @@ private fun PetAdCreateObject.toInternal(): PetAd = PetAd(
     name = this.name ?: "",
     description = this.description ?: "",
     breed = this.breed ?: "",
-    petType = this.petType.fromTransportType(),
     temperament = this.temperament.fromTransportTemperament(),
     size = this.propertySize ?: "",
     age = this.age ?: BigDecimal.ZERO,
@@ -135,5 +128,6 @@ private fun String?.fromTransportStatus(): PetAdStatus = when (this) {
 }
 
 private fun PetAdUpdateObject.toInternal(): PetAd = PetAd(
+    id = PetAdId(this.id!!),
     petAdStatus = this.adStatus.fromTransportStatus()
 )

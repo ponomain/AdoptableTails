@@ -1,19 +1,18 @@
 package ru.otus.otuskotlin.adoptabletails.repository.tests
 
-import kotlinx.datetime.Instant
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdStatus
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
-import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
 import java.math.BigDecimal
+import java.time.Instant
 
 abstract class BaseInitAds(val operation: String) : InitObjects<PetAd> {
     fun createInitTestModel(
         suf: String,
         name: String = "Test Name",
         breed: String = "Test Breed",
-        petType: PetType = PetType.NONE,
+        petType: String = "",
         age: BigDecimal = BigDecimal.ZERO,
         temperament: PetTemperament = PetTemperament.NONE,
         size: String = "Test Size",
@@ -23,7 +22,6 @@ abstract class BaseInitAds(val operation: String) : InitObjects<PetAd> {
         id = PetAdId("order-repository-$operation-$suf"),
         name = name,
         breed = breed,
-        petType = petType,
         age = age,
         temperament = temperament,
         size = size,

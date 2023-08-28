@@ -15,7 +15,6 @@ fun CorChainDsl<AdoptableTailsContext>.repositorySearch(title: String) = worker 
     handle {
         val request = DbAdFilterRequest(
             breed = petAdFilterValidated.breed,
-            type = petAdFilterValidated.type,
             temperament = petAdFilterValidated.temperament,
         )
         val result = adRepository.searchAd(request)

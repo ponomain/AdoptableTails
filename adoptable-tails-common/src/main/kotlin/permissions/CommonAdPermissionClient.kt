@@ -4,4 +4,5 @@ enum class CommonAdPermissionClient {
     CREATE,
     READ,
     DELETE,
+    UPDATE
 }

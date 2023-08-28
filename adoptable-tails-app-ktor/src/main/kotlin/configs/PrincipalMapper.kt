@@ -20,8 +20,9 @@ fun JWTPrincipal?.toModel() = this?.run {
             .getClaim(GROUPS_CLAIM)
             ?.asList(String::class.java)
             ?.mapNotNull {
-                when(it) {
+                when (it) {
                     "USER" -> CommonUserGroups.USER
+                    "SUPER_ADMIN" -> CommonUserGroups.SUPER_ADMIN
                     else -> null
                 }
             }?.toSet() ?: emptySet()

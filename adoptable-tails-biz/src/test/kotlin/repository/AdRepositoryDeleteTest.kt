@@ -2,7 +2,6 @@ package ru.otus.otuskotlin.adoptabletails.biz.repository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
 import ru.otus.otuskotlin.adoptabletails.biz.AdoptableTailsProcessor
 import ru.otus.otuskotlin.adoptabletails.common.AdoptableTailsContext
 import ru.otus.otuskotlin.adoptabletails.common.AdoptableTailsCorSettings
@@ -12,12 +11,12 @@ import ru.otus.otuskotlin.adoptabletails.common.models.AdoptableTailsWorkMode
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
-import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
 import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonPrincipalModel
 import ru.otus.otuskotlin.adoptabletails.common.permissions.CommonUserGroups
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdResponse
 import ru.otus.otuskotlin.adoptabletails.repository.tests.AdRepositoryMock
 import java.math.BigDecimal
+import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -34,7 +33,6 @@ class AdRepositoryDeleteTest {
                     id = PetAdId(adId),
                     name = "Fluffy",
                     breed = "Maine coon",
-                    petType = PetType.CAT,
                     age = BigDecimal(3.8),
                     temperament = PetTemperament.CHOLERIC,
                     size = "Above average",
@@ -50,7 +48,6 @@ class AdRepositoryDeleteTest {
                     id = PetAdId(adId),
                     name = "Fluffy",
                     breed = "Maine coon",
-                    petType = PetType.CAT,
                     age = BigDecimal(3.8),
                     temperament = PetTemperament.CHOLERIC,
                     size = "Above average",
@@ -91,7 +88,6 @@ class AdRepositoryDeleteTest {
         assertEquals(BigDecimal(3.8), context.petAdResponse.age)
         assertEquals("Fluffy", context.petAdResponse.name)
         assertEquals("Maine coon", context.petAdResponse.breed)
-        assertEquals(PetType.CAT, context.petAdResponse.petType)
         assertEquals(PetTemperament.CHOLERIC, context.petAdResponse.temperament)
         assertEquals("Above average", context.petAdResponse.size)
         assertEquals("Cute and king cat", context.petAdResponse.description)

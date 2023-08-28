@@ -8,31 +8,27 @@ import io.ktor.http.auth.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import ru.otus.otuskotlin.adoptabletails.app.ktor.AdoptableTailsAppSettings
 import ru.otus.otuskotlin.adoptabletails.app.ktor.configs.KtorAuthConfig
-import ru.otus.otuskotlin.adoptabletails.app.ktor.configs.KtorAuthConfig.Companion.GROUPS_CLAIM
 import java.net.URL
 import java.security.interfaces.RSAPublicKey
 
-fun Application.configureAuthorization(appConfigs: AdoptableTailsAppSettings) {
+fun Application.configureAuthorization(appConfigs: KtorAuthConfig) {
     install(Authentication) {
         jwt("auth-jwt") {
-            val authorizationConfig = appConfigs.authorization
-            realm = authorizationConfig.realm
+            realm = appConfigs.realm
 
             verifier {
-                val algorithm = it.resolveAlgorithm(authorizationConfig)
-                JWT.require(Algorithm.none())
-                    .withAudience(authorizationConfig.audience)
-                    .withIssuer(authorizationConfig.issuer)
+                val algorithm = it.resolveAlgorithm(appConfigs)
+                JWT.require(algorithm)
+                    .withAudience(appConfigs.audience)
+                    .withIssuer(appConfigs.issuer)
                     .build()
             }
-            validate { jwtCredential: JWTCredential ->
-                when {
-                    jwtCredential.payload.getClaim(GROUPS_CLAIM).asList(String::class.java).isNullOrEmpty() -> {
-                        null
-                    }
-                    else -> JWTPrincipal(jwtCredential.payload)
+            validate { jwt ->
+                if (jwt.payload.getClaim("username").asString() != "") {
+                    JWTPrincipal(jwt.payload)
+                } else {
+                    null
                 }
             }
         }
@@ -61,11 +57,9 @@ fun HttpAuthHeader.resolveAlgorithmKeycloak(authConfig: KtorAuthConfig): Algorit
         throw IllegalArgumentException("Wrong algorithm in JWT ($algo). Must be ...")
     }
     val keyId = token.keyId
-    val jwk = jwks[keyId] ?: run {
+    val jwk = jwks.computeIfAbsent(keyId){
         val provider = UrlJwkProvider(URL(authConfig.certUrl))
-        val jwk = provider.get(keyId)
-        jwks[keyId] = jwk
-        jwk
+        provider.get(keyId)
     }
     val publicKey = jwk.publicKey
     if (publicKey !is RSAPublicKey) {

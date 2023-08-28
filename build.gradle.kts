@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
@@ -17,7 +18,10 @@ allprojects {
 subprojects {
     group = rootProject.group
     version = rootProject.version
-    repositories {
-        mavenCentral()
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = JavaVersion.VERSION_11.toString()
+        }
     }
 }

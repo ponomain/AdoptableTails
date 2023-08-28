@@ -5,11 +5,10 @@ import com.datastax.oss.driver.api.mapper.annotations.CqlName
 import com.datastax.oss.driver.api.mapper.annotations.Entity
 import com.datastax.oss.driver.api.mapper.annotations.PartitionKey
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder
-import kotlinx.datetime.Instant
-import ru.otus.otuskotlin.adoptabletails.common.NONE
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import java.math.BigDecimal
+import java.time.Instant
 
 @Entity
 data class AdCassandraDto(
@@ -22,9 +21,6 @@ data class AdCassandraDto(
 
     @CqlName(COLUMN_BREED)
     var breed: String? = null,
-
-    @CqlName(COLUMN_TYPE)
-    var type: PetTypeCassandra? = null,
 
     @CqlName(COLUMN_AGE)
     var age: BigDecimal? = null,
@@ -51,13 +47,12 @@ data class AdCassandraDto(
         id = adModel.id.takeIf { it != PetAdId.NONE }?.asString(),
         name = adModel.name.takeIf { it.isNotEmpty() },
         breed = adModel.breed.takeIf { it.isNotEmpty() },
-        type = adModel.petType.toTransport(),
         age = adModel.age.takeIf { it >= BigDecimal.ZERO },
         temperament = adModel.temperament.toTransport(),
         size = adModel.size.takeIf { it.isNotEmpty() },
         description = adModel.description.takeIf { it.isNotEmpty() },
-        createdAt = adModel.createdAt,
-        updatedAt = adModel.updatedAt,
+        createdAt = adModel.createdAt.takeIf { it != Instant.MIN },
+        updatedAt = adModel.updatedAt.takeIf { it != Instant.MIN },
         adStatus = adModel.petAdStatus.toTransport()
     )
 
@@ -65,13 +60,12 @@ data class AdCassandraDto(
         id = id?.let { PetAdId(it) } ?: PetAdId.NONE,
         name = name?.let { it } ?: "",
         breed = breed?.let { it } ?: "",
-        petType = type.fromTransport(),
         age = age?.let { it } ?: BigDecimal.ZERO,
         temperament = temperament.fromTransport(),
         size = size?.let { it } ?: "",
         description = description?.let { it } ?: "",
-        createdAt = createdAt?.let { it } ?: Instant.NONE,
-        updatedAt = updatedAt?.let { it } ?: Instant.NONE,
+        createdAt = createdAt?.let { it } ?: Instant.MIN,
+        updatedAt = updatedAt?.let { it } ?: Instant.MIN,
         petAdStatus = adStatus.fromTransport()
     )
 
@@ -81,7 +75,6 @@ data class AdCassandraDto(
         const val COLUMN_ID = "id"
         const val COLUMN_NAME = "name"
         const val COLUMN_BREED = "breed"
-        const val COLUMN_TYPE = "type"
         const val COLUMN_AGE = "age"
         const val COLUMN_TEMPERAMENT = "temperament"
         const val COLUMN_SIZE = "size"
@@ -97,7 +90,6 @@ data class AdCassandraDto(
                 .withPartitionKey(COLUMN_ID, DataTypes.TEXT)
                 .withColumn(COLUMN_NAME, DataTypes.TEXT)
                 .withColumn(COLUMN_BREED, DataTypes.TEXT)
-                .withColumn(COLUMN_TYPE, DataTypes.TEXT)
                 .withColumn(COLUMN_AGE, DataTypes.DECIMAL)
                 .withColumn(COLUMN_TEMPERAMENT, DataTypes.TEXT)
                 .withColumn(COLUMN_SIZE, DataTypes.TEXT)

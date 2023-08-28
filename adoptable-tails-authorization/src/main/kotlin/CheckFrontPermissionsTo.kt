@@ -32,7 +32,10 @@ private val accessTable = mapOf(
     ),
 
     // Delete
-    CommonUserPermissions.DELETE_OWN to mapOf(
+    CommonUserPermissions.DELETE_ALL to mapOf(
         CommonPrincipalRelations.OWN to CommonAdPermissionClient.DELETE
+    ),
+    CommonUserPermissions.DELETE_ALL to mapOf(
+        CommonPrincipalRelations.NONE to CommonAdPermissionClient.DELETE
     ),
 )

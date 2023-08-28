@@ -180,14 +180,6 @@ components:
       type: string
       description: ID of the pet advertisements
 
-    PetType:
-      type: string
-      description: Type of the pet
-      enum:
-        - DOG
-        - CAT
-        - NONE
-
     PetTemperament:
       type: string
       description: Temperament of the pet
@@ -216,9 +208,6 @@ components:
         breed:
           type: string
           description: Breed of the pet
-        petType:
-          type: string
-          description: Type of the pet
         age:
           type: number
           description: Age of the pet
@@ -231,6 +220,12 @@ components:
         description:
           type: string
           description: Description of the pet
+        createdAd:
+          type: string
+          description: Created at
+        updatedAt:
+          type: string
+          description: Updated at
 
     BaseUpdatePetAd:
       type: object

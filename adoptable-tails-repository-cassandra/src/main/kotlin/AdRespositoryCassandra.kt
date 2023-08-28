@@ -17,12 +17,15 @@ import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdFilterRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdIdRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdResponse
+import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdUpdateRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdsResponse
 import ru.otus.otuskotlin.adoptabletails.repository.cassandra.model.AdCassandraDto
 import ru.otus.otuskotlin.adoptabletails.repository.cassandra.model.AdStatusCassandra
 import ru.otus.otuskotlin.adoptabletails.repository.cassandra.model.PetTemperamentCassandra
+import ru.otus.otuskotlin.adoptabletails.repository.cassandra.model.toTransport
 import java.net.InetAddress
 import java.net.InetSocketAddress
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.CompletionStage
 import kotlin.time.Duration
@@ -35,7 +38,7 @@ class AdRepositoryCassandra(
     private val port: Int = 9042,
     private val username: String = "cassandra",
     private val password: String = "cassandra",
-    private val testing: Boolean = false,
+    private val testing: Boolean = true,
     private val timeout: Duration = 30.toDuration(DurationUnit.SECONDS),
     private val randomUuid: () -> String = { UUID.randomUUID().toString() },
     initObjects: Collection<PetAd> = emptyList(),
@@ -143,11 +146,24 @@ class AdRepositoryCassandra(
         }
 
     override suspend fun createAd(rq: DbAdRequest): DbAdResponse {
-        val new = rq.ad.copy(id = PetAdId(randomUuid()))
+        val new = rq.ad.copy(id = PetAdId(randomUuid()), createdAt = Instant.now())
         return doDbAction(
             "create",
             { dao.create(AdCassandraDto(new)) },
             { DbAdResponse.success(new) },
+            ::errorToAdResponse
+        )
+    }
+
+    override suspend fun updateAd(rq: DbAdUpdateRequest): DbAdResponse {
+        val existing = dao.read(rq.id.asString())
+        val dto = existing.await()
+        dto?.adStatus = rq.status.toTransport()
+        dto?.updatedAt = Instant.now()
+        return doDbAction(
+            "update",
+            { dao.update(dto!!) },
+            { DbAdResponse.success(dto?.toAdModel()!!) },
             ::errorToAdResponse
         )
     }

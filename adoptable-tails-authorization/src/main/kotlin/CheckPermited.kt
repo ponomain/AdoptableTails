@@ -47,11 +47,18 @@ private val accessTable = mapOf(
         relation = CommonPrincipalRelations.NONE,
     ) to true,
 
+    //Update
+    AccessTableConditions(
+        command = AdoptableTailsCommand.UPDATE,
+        permission = CommonUserPermissions.UPDATE_ALL,
+        relation = CommonPrincipalRelations.NONE,
+    ) to true,
+
     // Delete
     AccessTableConditions(
         command = AdoptableTailsCommand.DELETE,
-        permission = CommonUserPermissions.DELETE_OWN,
-        relation = CommonPrincipalRelations.OWN,
+        permission = CommonUserPermissions.DELETE_ALL,
+        relation = CommonPrincipalRelations.NONE,
     ) to true,
 
     // Search

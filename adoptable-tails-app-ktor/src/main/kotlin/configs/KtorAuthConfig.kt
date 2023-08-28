@@ -16,11 +16,12 @@ data class KtorAuthConfig(
         const val L_NAME_CLAIM = "lname"
 
         val TEST = KtorAuthConfig(
-            secret = "secret",
-            issuer = "adoptable-tails",
-            audience = "ad-user",
-            realm = "adoptable-tails-realm",
-            clientId = "adoptable-tails-ad",
+            audience = "testAudience",
+            realm = "testRealm",
+            secret = "testSecret",
+            certUrl = "testCertPath",
+            clientId = "testId",
+            issuer = "testIssuer"
         )
 
         val NONE = KtorAuthConfig(

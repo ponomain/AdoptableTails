@@ -8,7 +8,6 @@ import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAd
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdId
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetAdStatus
 import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetTemperament
-import ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType
 import ru.otus.otuskotlin.adoptabletails.mappers.exception.UnsupportedCommandException
 import ru.otus.otuskotlin.api.models.Error
 import ru.otus.otuskotlin.api.models.IResponse
@@ -21,6 +20,7 @@ import ru.otus.otuskotlin.api.models.PetAdSearchResponse
 import ru.otus.otuskotlin.api.models.PetAdUpdateResponse
 import ru.otus.otuskotlin.api.models.ResponseResult
 import java.math.BigDecimal
+import java.time.Instant
 
 fun AdoptableTailsContext.toTransportPetAd(): IResponse = when (val cmd = command) {
     AdoptableTailsCommand.CREATE -> toTransportPetAdCreate()
@@ -76,11 +76,12 @@ private fun PetAd.toTransportFullPetAd(): PetAdResponseFullObject = PetAdRespons
     description = description.takeIf { it.isNotBlank() },
     name = name.takeIf { it.isNotBlank() },
     breed = breed.takeIf { it.isNotBlank() },
-    petType = petType.takeIf { it != PetType.NONE }?.name,
     age = age.takeIf { it >= BigDecimal.ZERO },
     temperament = temperament.takeIf { it != PetTemperament.NONE }?.name,
     propertySize = size.takeIf { it.isNotBlank() },
-    adStatus = petAdStatus.takeIf { it != PetAdStatus.NONE }?.name
+    adStatus = petAdStatus.takeIf { it != PetAdStatus.NONE }?.name,
+    createdAd = createdAt.takeIf { it != Instant.MIN }.toString(),
+    updatedAt = updatedAt.takeIf { it != Instant.MIN }.toString()
 )
 
 private fun PetAd.toTransportDeletePetAd(): PetAdResponseDeleteObject = PetAdResponseDeleteObject(

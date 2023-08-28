@@ -76,7 +76,6 @@ class PetAdSuccessStubTest : FunSpec({
                 petAd = PetAdCreateObject(
                     name = "Sparky",
                     breed = "Unknown",
-                    petType = ru.otus.otuskotlin.adoptabletails.common.models.advertisement.PetType.DOG.name,
                     age = BigDecimal.TEN,
                     temperament = PetTemperament.MELANCHOLIC.name,
                     propertySize = "BIG",
@@ -96,7 +95,6 @@ class PetAdSuccessStubTest : FunSpec({
             petAdCreateResponse.petAd?.name shouldBe "Sparky"
             petAdCreateResponse.petAd?.description shouldBe "Playfull and king dog"
             petAdCreateResponse.petAd?.breed shouldBe "Unknown"
-            petAdCreateResponse.petAd?.petType shouldBe "DOG"
             petAdCreateResponse.petAd?.age shouldBe "10"
             petAdCreateResponse.petAd?.temperament shouldBe "MELANCHOLIC"
             petAdCreateResponse.petAd?.propertySize shouldBe "BIG"
@@ -237,7 +235,6 @@ class PetAdSuccessStubTest : FunSpec({
                         isSuccess = true,
                         data = listOf(
                             PetAd(
-                                petType = it.type,
                                 temperament = it.temperament
                             )
                         )

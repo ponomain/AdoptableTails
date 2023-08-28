@@ -5,7 +5,7 @@
     <property name="LOGS_FB_HOSTS" value="${LOGS_FB_HOSTS:-127.0.0.1}"/>
     <property name="LOGS_FB_PORT" value="${LOGS_FB_PORT:-24224}"/>
     <property name="SERVICE_NAME" value="${SERVICE_NAME:-adoptabletails}"/>
-    <property name="LOG_BS_LEVEL" value="${LOG_BS_LEVEL:-info}"/>
+    <property name="LOG_BS_LEVEL" value="${LOG_BS_LEVEL:-debug}"/>
     <property name="LOG_COMMON_LEVEL" value="${LOG_COMMON_LEVEL:-error}"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -54,7 +54,7 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="Application" level="INFO">
+    <logger name="Application" level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </logger>
 

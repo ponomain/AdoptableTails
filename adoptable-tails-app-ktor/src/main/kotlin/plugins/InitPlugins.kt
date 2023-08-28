@@ -11,18 +11,19 @@ import io.ktor.server.plugins.defaultheaders.*
 import org.slf4j.event.Level
 import ru.otus.otuskotlin.adoptabletails.api.apiV1Mapper
 import ru.otus.otuskotlin.adoptabletails.app.ktor.AdoptableTailsAppSettings
+import ru.otus.otuskotlin.adoptabletails.app.ktor.configs.KtorAuthConfig
 import ru.otus.otuskotlin.adoptabletails.app.ktor.module
 import ru.otus.otuskotlin.adoptabletails.lib.logback.LogWrapperLogback
 
 private val clazz = Application::module::class.qualifiedName ?: "Application"
 
-fun Application.initPlugins(appSettings: AdoptableTailsAppSettings) {
+fun Application.initPlugins(appSettings: AdoptableTailsAppSettings, authSettings: KtorAuthConfig) {
 
     install(CachingHeaders)
     install(DefaultHeaders)
     install(AutoHeadResponse)
     install(CORS)
-    configureAuthorization(appSettings)
+    configureAuthorization(authSettings)
     install(ContentNegotiation) {
         jackson {
             setConfig(apiV1Mapper.serializationConfig)

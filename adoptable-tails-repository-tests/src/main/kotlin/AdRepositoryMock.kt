@@ -5,6 +5,7 @@ import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdFilterRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdIdRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdResponse
+import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdUpdateRequest
 import ru.otus.otuskotlin.adoptabletails.common.repository.DbAdsResponse
 
 class AdRepositoryMock(
@@ -12,6 +13,7 @@ class AdRepositoryMock(
     private val invokeReadAd: (DbAdIdRequest) -> DbAdResponse = { DbAdResponse.MOCK_SUCCESS_EMPTY },
     private val invokeDeleteAd: (DbAdIdRequest) -> DbAdResponse = { DbAdResponse.MOCK_SUCCESS_EMPTY },
     private val invokeSearchAd: (DbAdFilterRequest) -> DbAdsResponse = { DbAdsResponse.MOCK_SUCCESS_EMPTY },
+    private val invokeUpdateAd: (DbAdUpdateRequest) -> DbAdResponse = { DbAdResponse.MOCK_SUCCESS_EMPTY }
 ) : AdRepository {
     override suspend fun createAd(rq: DbAdRequest): DbAdResponse {
         return invokeCreateAd(rq)
@@ -19,6 +21,10 @@ class AdRepositoryMock(
 
     override suspend fun readAd(rq: DbAdIdRequest): DbAdResponse {
         return invokeReadAd(rq)
+    }
+
+    override suspend fun updateAd(rq: DbAdUpdateRequest): DbAdResponse {
+        return invokeUpdateAd(rq)
     }
 
     override suspend fun deleteAd(rq: DbAdIdRequest): DbAdResponse {

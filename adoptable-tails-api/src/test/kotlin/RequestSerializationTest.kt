@@ -23,7 +23,6 @@ class RequestSerializationTest {
         petAd = PetAdCreateObject(
             name = "Sparkle",
             breed = "Unknown",
-            petType = PetType.CAT.name,
             age = BigDecimal.ONE,
             temperament = PetTemperament.CHOLERIC.name,
             propertySize = "Small",
@@ -40,7 +39,6 @@ class RequestSerializationTest {
         assertContains(json, Regex("\"stub\":\\s*\"cannotRead\""))
         assertContains(json, Regex("\"name\":\\s*\"Sparkle\""))
         assertContains(json, Regex("\"breed\":\\s*\"Unknown\""))
-        assertContains(json, Regex("\"petType\":\\s*\"CAT\""))
         assertContains(json, Regex("\"age\":\\d*1"))
         assertContains(json, Regex("\"temperament\":\\s*\"CHOLERIC\""))
         assertContains(json, Regex("\"size\":\\s*\"Small\""))

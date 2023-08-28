@@ -22,13 +22,14 @@ suspend inline fun <reified Q : IRequest> ApplicationCall.petAdProcess(
     logId: String,
     command: AdoptableTailsCommand,
 ) {
-    val ctx = AdoptableTailsContext(
+    var ctx = AdoptableTailsContext(
         timeStart = kotlinx.datetime.Clock.System.now(),
     )
     try {
         logger.doWithLogging(id = logId) {
             val request = receive<Q>()
-            ctx.fromTransportPetAd(request)
+            ctx = ctx.fromTransportPetAd(request)
+            ctx.adRepository = appSettings.corSettings.repositoryProd
             ctx.principal = principal<JWTPrincipal>().toModel()
             logger.info(
                 msg = "$command request is got",

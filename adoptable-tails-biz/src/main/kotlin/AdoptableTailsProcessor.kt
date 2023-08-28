@@ -8,8 +8,10 @@ import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryCreate
 import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryDelete
 import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryPrepareCreate
 import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryPrepareDelete
+//import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryPrepareUpdate
 import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryRead
 import ru.otus.otuskotlin.adoptabletails.biz.repository.repositorySearch
+import ru.otus.otuskotlin.adoptabletails.biz.repository.repositoryUpdate
 import ru.otus.otuskotlin.adoptabletails.biz.validation.finishPetAdValidation
 import ru.otus.otuskotlin.adoptabletails.biz.validation.validateIdNotEmpty
 import ru.otus.otuskotlin.adoptabletails.biz.validation.validateIdProperFormat
@@ -52,7 +54,7 @@ class AdoptableTailsProcessor(
         private val BusinessChain = rootChain<AdoptableTailsContext> {
             initStatus("Status initialization")
 
-            operation("Create product group", AdoptableTailsCommand.CREATE) {
+            operation("Create ad", AdoptableTailsCommand.CREATE) {
                 stubs("Stub processing") {
                     stubCreateSuccess("Simulation of successful processing")
                     stubValidationBadName("Simulation a name validation error")
@@ -62,7 +64,7 @@ class AdoptableTailsProcessor(
                     stubNoCase("Error: requested stub not permit")
                 }
                 validation {
-                    worker("Copying the fields to downWorkValidating") { petAdValidating = petAdRequest.copy() }
+                    worker("Copying the fields to petAdValidating") { petAdValidating = petAdRequest.copy() }
                     worker("Cleaning id") { petAdValidating.id = PetAdId.NONE }
 
                     worker("Cleaning name") { petAdValidating.name = petAdValidating.name.trim() }
@@ -87,7 +89,7 @@ class AdoptableTailsProcessor(
                 prepareResult("Prepare response")
             }
 
-            operation("Receive product group", AdoptableTailsCommand.READ) {
+            operation("Receive ad", AdoptableTailsCommand.READ) {
                 stubs("Stub processing") {
                     stubReadSuccess("Simulation of successful processing")
                     stubValidationBadId("Simulation an id validation error")
@@ -118,10 +120,10 @@ class AdoptableTailsProcessor(
                     }
                 }
                 frontPermissions("Calculating user permissions for the frontend.")
-                prepareResult("Подготовка ответа")
+                prepareResult("Prepare response")
             }
 
-            operation("Change product group", AdoptableTailsCommand.UPDATE) {
+            operation("Change ad status", AdoptableTailsCommand.UPDATE) {
                 stubs("Stub processing") {
                     stubUpdateSuccess("Simulation of successful processing")
                     stubValidationBadId("Simulation an id validation error")
@@ -133,26 +135,28 @@ class AdoptableTailsProcessor(
                 }
 
                 validation {
-                    worker("Copying the fields to downWorkValidating") { petAdValidating = petAdRequest.copy() }
+                    worker("Copying the fields to petAdValidating") { petAdValidating = petAdRequest.copy() }
                     worker("Cleaning id") {
                         petAdValidating.id = PetAdId(petAdValidating.id.asString().trim())
-                    }
-                    worker("Cleaning name") { petAdValidating.name = petAdValidating.name.trim() }
-                    worker("Cleaning breed") {
-                        petAdValidating.breed = petAdValidating.breed.trim()
                     }
 
                     validateIdNotEmpty("Check id is not empty")
                     validateIdProperFormat("Check id format")
-                    validatePetAdAge("Check age")
-                    validatePetAdBreed("Check breed")
-                    validatePetAdName("Check name")
 
                     finishPetAdValidation("Completion of checks")
                 }
+                chainPermissions("Calculating permissions for the user.")
+                chain {
+                    title = "Update logic"
+                    repositoryRead("Read pet ad from db")
+                    accessValidation("Calculating access rights.")
+                    repositoryUpdate("Update pet ad into db")
+                }
+                frontPermissions("Calculating user permissions for the frontend.")
+                prepareResult("Prepare response")
             }
 
-            operation("Delete product group", AdoptableTailsCommand.DELETE) {
+            operation("Delete ad", AdoptableTailsCommand.DELETE) {
                 stubs("Stub processing") {
                     stubDeleteSuccess("Simulation of successful processing")
                     stubValidationBadId("Simulation an id validation error")
@@ -161,7 +165,7 @@ class AdoptableTailsProcessor(
                 }
 
                 validation {
-                    worker("Copying the fields to downWorkValidating") { petAdValidating = petAdRequest.copy() }
+                    worker("Copying the fields to petAdValidating") { petAdValidating = petAdRequest.copy() }
                     worker("Cleaning id") {
                         petAdValidating.id = PetAdId(petAdValidating.id.asString().trim())
                     }
@@ -174,16 +178,16 @@ class AdoptableTailsProcessor(
                 chainPermissions("Calculating permissions for the user.")
                 chain {
                     title = "Delete logic"
-                    accessValidation("Calculating access rights.")
                     repositoryRead("Read pet ad from db")
                     repositoryPrepareDelete("Prepare object for deletion")
+                    accessValidation("Calculating access rights.")
                     repositoryDelete("Delete pet ad from db")
                 }
                 frontPermissions("Calculating user permissions for the frontend.")
                 prepareResult("Prepare response")
             }
 
-            operation("Search product group", AdoptableTailsCommand.SEARCH) {
+            operation("Search ads", AdoptableTailsCommand.SEARCH) {
                 stubs("Stub processing") {
                     stubSearchSuccess("Simulation of successful processing")
                     stubValidationBadId("Simulation an id validation error")
@@ -192,7 +196,7 @@ class AdoptableTailsProcessor(
                 }
 
                 validation {
-                    worker("Copying the fields to downWorkValidating") { petAdValidating = petAdRequest.copy() }
+                    worker("Copying the fields to petAdValidating") { petAdValidating = petAdRequest.copy() }
 
                     finishPetAdValidation("Completion of checks")
                 }

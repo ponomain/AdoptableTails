@@ -10,7 +10,6 @@ An application that serves as a platform for posting advertisements about shelte
 1. Marketing
     1. [Stakeholders](./docs/01-marketing/02-stakeholders.md)
     2. [Target Audience](./docs/01-marketing/01-target-audience.md)
-    3. [Конкурентный анализ](./docs/01-marketing/03-concurrency.md)
 2. DevOps
     1. [Infrastructure](./docs/02-devops/01-infrastructure.md)
     2. [Monitoring](./docs/02-devops/02-monitoring.md)
